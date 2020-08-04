@@ -1,0 +1,184 @@
+% Encoding: ISO-8859-1
+
+
+@TechReport{GDGISS2013,
+  Title                    = {Directly connected imperviousness compilation for Melbourne Water selected catchments. A report for Melbourne Water},
+  Author                   = {{Grace Detailed-GIS Services}},
+  Year                     = {2013},
+
+  Address                  = {Melbourne},
+
+  Owner                    = {chris},
+  Pages                    = {30 pps},
+  Refid                    = {5217},
+  Timestamp                = {2016.07.08}
+}
+
+@TechReport{WalshWebb2013,
+  Title                    = {Predicting stream macroinvertebrate assemblage composition as a function of land use, physiography and climate: a guide for strategic planning for river and water management in the Melbourne Water region. Melbourne Waterway Research Practice Partnership Report 13-1},
+  Author                   = {Walsh, C.J. and Webb, J.A.},
+  Year                     = {2013},
+
+  Address                  = {Melbourne},
+  Owner                    = {chris},
+  Pages                    = {100 pp},
+  Publisher                = {Department of Resource Management and Geography, The University of Melbourne},
+  Refid                    = {4775},
+  Timestamp                = {2016.06.30}
+}
+
+@Article{WalshEtAl2016,
+  Title                    = {Principles for urban stormwater management to protect stream ecosystems},
+  Author                   = {Walsh, Christopher J and Booth, Derek B and Burns, Matthew J and Fletcher, Tim D. and Hale, Rebecca L. and Hoang, Lan N. and Livingston, Grant and Rippy, Megan A. and Roy, Allison H. and Scoggins, Mateo and Wallace, Angela},
+  Journal                  = {Freshwater Science},
+  Year                     = {2016},
+  Pages                    = {398--411},
+  Volume                   = {35},
+
+  __markedentry            = {[chris:6]},
+  Comment                  = {SUSE3 Special Series article},
+  Owner                    = {chris},
+  Refid                    = {5398},
+  Timestamp                = {2016.07.11}
+}
+
+@Article{WalshKunapo2009,
+  Title                    = {The importance of upland flow paths in determining urban effects on stream ecosystems},
+  Author                   = {Walsh, Christopher J and Kunapo, Joshphar},
+  Journal                  = {Journal of the North American Benthological Society},
+  Year                     = {2009},
+  Pages                    = {977--990},
+  Volume                   = {28},
+
+  __markedentry            = {[chris:]},
+  Abstract                 = {Mitigation of urban effects on streams requires an understanding of the paths by which urban effects are transmitted from catchments to streams and how those effects are attenuated with distance. We assessed whether modeling attenuation from impervious surfaces and septic tanks along drainage lines improved prediction of 3 instream ecological indicators. Eleven regression models were calculated for each indicator (Escherichia coli, NO3/NO2, and Stream Invertebrate Grade Number Average Level [SIGNAL; a macroinvertebrate assemblage composition index]). Predictor variables included imperviousness or septic-tank density with no attenuation (i.e., total imperviousness and tank density), with overland attenuation (exponential decay with distance along topographic flow paths to stormwater drain or to stream), and with overland and instream attenuation (exponential decay with distance travelled within the stream). Escherichia coli was best predicted by the weighted density of septic tanks, with their influence attenuated to near 0 within tens of meters of the stream and within thousands of meters along streams. These results suggest strong overland attenuation of bacterial contamination and indicate that stormwater drains are not important pathways for septic leakage in this area. NO3/NO2, which is mobile through soils, was best predicted by nonattenuated septic-tank density within catchments. SIGNAL was best predicted by either impervious area or septic tanks within tens of meters of stormwater drains, a result suggesting that SIGNAL is most strongly affected by stormwater runoff routed through stormwater pipes to streams. Management of dry-weather fecal and N contamination in the study streams should focus on septic tank management (stricter maintenance regimes or replacement with other sewage management systems). Near-stream septic tanks are probably most important for fecal contamination, whereas catchment-wide management probably will be required for reduction of dry-weather N concentrations. Management of broader instream ecological condition, as indicated by macroinvertebrate assemblage composition, probably will require catchment-wide retention of stormwater runoff (using tanks or infiltration systems) to mimic natural flow-paths between catchments and streams.},
+  Owner                    = {chris},
+  Refid                    = {4538},
+  Timestamp                = {2016.07.08}
+}
+
+@Article{WalshWebb2014,
+  author    = {Walsh, Christopher J and Webb, J Angus},
+  title     = {Spatial weighting of land use and temporal weighting of antecedent discharge improves prediction of stream condition},
+  journal   = {Landscape Ecology},
+  year      = {2014},
+  volume    = {29},
+  number    = {7},
+  pages     = {1171--1185},
+  publisher = {Springer Netherlands},
+}
+
+@Article{WalshWebb2016,
+  author    = {Walsh, Christopher J and Webb, J Angus},
+  title     = {Interactive effects of urban stormwater drainage, land clearance, and flow regime on stream macroinvertebrate assemblages across a large metropolitan region},
+  journal   = {Freshwater Science},
+  year      = {2016},
+  volume    = {35},
+  number    = {1},
+  pages     = {324--339},
+  publisher = {University of Chicago Press Chicago, IL},
+}
+
+@Article{WalsheEtAl2016,
+  author    = {Walsh, Christopher J and Fletcher, Tim D and Vietz, Geoff J},
+  title     = {Variability in stream ecosystem response to urbanization Unraveling the influences of physiography and urban land and water management},
+  journal   = {Progress in Physical Geography},
+  year      = {2016},
+  volume    = {40},
+  number    = {5},
+  pages     = {714--731},
+  publisher = {SAGE Publications},
+}
+
+@Article{Walsh2017,
+  author  = {Walsh, Christopher J},
+  title   = {LUMaR: a sensitive macroinvertebrate index of stream condition combining observed:expected ratios and sensitivity weightings},
+  journal = {unpublished MS},
+  year    = {2017},
+}
+
+@Article{Chessman1995,
+  author    = {Chessman, Bruce C},
+  title     = {Rapid assessment of rivers using macroinvertebrates: a procedure based on habitat-specific sampling, family level identification and a biotic index},
+  journal   = {Australian Journal of Ecology},
+  year      = {1995},
+  volume    = {20},
+  number    = {1},
+  pages     = {122--129},
+  publisher = {Wiley Online Library},
+}
+
+@Article{Chessman2003,
+  author    = {Chessman, Bruce C},
+  title     = {New sensitivity grades for Australian river macroinvertebrates},
+  journal   = {Marine and Freshwater Research},
+  year      = {2003},
+  volume    = {54},
+  number    = {2},
+  pages     = {95--103},
+  publisher = {CSIRO},
+}
+
+@InProceedings{SimpsonNorris2000,
+  author       = {Simpson, JC and Norris, RH},
+  title        = {Biological assessment of river quality: development of AUSRIVAS models and outputs.},
+  booktitle    = {Assessing the biological quality of fresh waters: RIVPACS and other techniques. Proceedings of an International Workshop held in {Oxford, UK}, on 16-18 September 1997},
+  year         = {2000},
+  pages        = {125--142},
+  organization = {Freshwater Biological Association (FBA)},
+}
+
+@Article{ElithEtAl2008,
+  author    = {Elith, Jane and Leathwick, John R and Hastie, Trevor},
+  title     = {A working guide to boosted regression trees},
+  journal   = {Journal of Animal Ecology},
+  year      = {2008},
+  volume    = {77},
+  number    = {4},
+  pages     = {802--813},
+  publisher = {Wiley Online Library},
+}
+
+@TechReport{EPAVictoria2003,
+  author  = {EPA Victoria,},
+  title   = {Rapid bioassessment methodology for rivers and streams},
+  year    = {2003},
+  number  = {604.1},
+  journal = {Environment Protection Authority Victoria, Guideline for environmental management, Publication},
+}
+
+@Article{MartinEtAl2014,
+  author    = {Martin, Elizabeth H and Walsh, Christopher J and Serena, Melody and Webb, J Angus},
+  title     = {Urban stormwater runoff limits distribution of platypus},
+  journal   = {Austral Ecology},
+  year      = {2014},
+  volume    = {39},
+  number    = {3},
+  pages     = {337--345},
+  file      = {:MartinEtAl2014 - Urban stormwater runoff limits distribution of platypus.pdf:PDF},
+  publisher = {Wiley Online Library},
+}
+
+@Article{BurnsEtAl2012,
+  author    = {Burns, Matthew J and Fletcher, Tim D and Walsh, Christopher J and Ladson, Anthony R and Hatt, Belinda E},
+  title     = {Hydrologic shortcomings of conventional urban stormwater management and opportunities for reform},
+  journal   = {Landscape and Urban Planning},
+  year      = {2012},
+  volume    = {105},
+  number    = {3},
+  pages     = {230--240},
+  publisher = {Elsevier},
+}
+
+@Article{WalshEtAl2012,
+  author    = {Walsh, Christopher J and Fletcher, Tim D and Burns, Matthew J},
+  title     = {Urban stormwater runoff: a new class of environmental flow problem},
+  journal   = {PLOS ONE},
+  year      = {2012},
+  volume    = {7},
+  number    = {9},
+  pages     = {e45814},
+  publisher = {Public Library of Science},
+}
+
+@Comment{jabref-meta: databaseType:bibtex;}

@@ -1,0 +1,4 @@
+load("/Users/cwalsh/Work/projects/LUMaR/packageBuild/LUMaR/data/mwstreams.rda")
+names(mwstreams)
+load("/Users/cwalsh/Work/projects/LUMaR/packageBuild/LUMaR/data/taxon.classes.rda")
+taxon.classes
