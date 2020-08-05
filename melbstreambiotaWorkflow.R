@@ -32,8 +32,8 @@ devtools::check()
 devtools::build()
 #then check to see if the vignette knits with the package built: if so move the vignette folder back and run check and build again
 start <- Sys.time()
-install.packages("~/Work/projects/LUMaR/packageBuild/melbstreambiota_0.1.0.tar.gz", repos = NULL, type = "source")
+install.packages("../melbstreambiota_0.1.1.tar.gz", repos = NULL, type = "source")
 #or from the web:
-#install.packages("http://urbanstreams.net/resources/melbstreambiota_0.1.0.tar.gz", repos = NULL, type = "source")
+#install.packages("http://urbanstreams.net/resources/melbstreambiota_0.1.1.tar.gz", repos = NULL, type = "source")
 Sys.time() - start  #At least 10 minutes to install
 library(melbstreambiota)

@@ -218,7 +218,7 @@ lumar <- function(obs.table, exp.table)
 #' obsTable <-collateObsTable(bugData, sampprs)
 #' oestats(obsTable, expTable)
 #' @export
-oestats8 <- function(obs.table, exp.table, general.threshold = NA)
+oestats <- function(obs.table, exp.table, general.threshold = NA)
 {
   oe <- function(c.obs.exp)  #single vector concatenating obs and exp to allow apply
   {

@@ -12,7 +12,7 @@ most importantly, 84 Boosted Regression Tree Model objects which are used by the
 but also a map of the stream network; and 
 a table of environmental data for each of 8231 subcatchments that the network is split into;
 including a large table of monthly antecedent flow estimates for every subcatchment in the region.
-These large data are not kept on this github repository, so if you are building the package from source, 
+These large data files are not kept on this github repository, so if you are building the package from source, 
 you will need to be loaded separately into your local github folders from the mirror on the
 University of Melbourne shared drive: wergStaff/ChrisW/rstudio_projects/melbstreambiota.  
 If you have access to this folder, you should copy the following 3 files to the appropriate directory
@@ -23,7 +23,7 @@ data/mwStreamsMap.rda
 The compiled package is publicly available at 
 https://tools.thewerg.unimelb.edu.au/LUMaR/
 
-Download instructions from that site follow
+Download instructions from that site follow:
 install.packages('https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.1.tar.gz', repos = NULL, type = 'source')
 Please note that the package is 663 Mb, and can take ~15 min to install once it is downloaded on a powerful computer. 
 (Once it is installed, it is quick to load and use).
@@ -32,3 +32,7 @@ Manual, which details the usage of all package functions, and contents of all pa
 https://tools.thewerg.unimelb.edu.au/documents/melbstreambiota.pdf
 Vignette, which illustrates the functions of the package with worked examples.
 https://tools.thewerg.unimelb.edu.au/documents/melbstreambiota_vignette.pdf
+
+
+Old versions available at:
+https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.1.tar.gz

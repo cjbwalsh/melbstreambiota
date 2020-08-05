@@ -4,8 +4,13 @@
 \alias{sampprDiagnostic}
 \title{Interpretation of an observed LUMaR score at an individual site}
 \usage{
-sampprDiagnostic(samppri, obsTable, currentPredTable, NHIPredTable,
-  returnTable = FALSE)
+sampprDiagnostic(
+  samppri,
+  obsTable,
+  currentPredTable,
+  NHIPredTable,
+  returnTable = FALSE
+)
 }
 \arguments{
 \item{samppri}{a data.frame with a single row, with fields samppr, and subc
