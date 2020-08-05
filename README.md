@@ -18,6 +18,7 @@ The R package is non-standard, and contains several large data files:
 These large data files are not kept on this github repository, so if you are building the package from source, 
 you will need to be loaded separately into your local github folders from the mirror on the
 University of Melbourne shared drive: wergStaff/ChrisW/rstudio_projects/melbstreambiota.  
+
 If you have access to this folder, you should copy the following 3 files to the appropriate directory:  
 
 - R/sysdata.R (the model data)  
@@ -34,12 +35,15 @@ Download instructions from that site follow:
 install.packages('https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.1.tar.gz', repos = NULL, type = 'source')
 Please note that the package is 665 Mb, and can take ~15 min to install once it is downloaded on a powerful computer. 
 (Once it is installed, it is quick to load and use).
-Associated resources for using the package:
-Manual, which details the usage of all package functions, and contents of all package data;
-https://tools.thewerg.unimelb.edu.au/documents/melbstreambiota.pdf
-Vignette, which illustrates the functions of the package with worked examples.
-https://tools.thewerg.unimelb.edu.au/documents/melbstreambiota_vignette.pdf
+Associated resources for using the package:  
+
+- Manual, which details the usage of all package functions, and contents of all package data;
+https://tools.thewerg.unimelb.edu.au/documents/melbstreambiota.pdf  
+
+- Vignette, which illustrates the functions of the package with worked examples.
+https://tools.thewerg.unimelb.edu.au/documents/melbstreambiota_vignette.pdf  
 
 
-Old versions available at:
-https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.0.tar.gz
+Old versions available at:  
+
+- https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.0.tar.gz
