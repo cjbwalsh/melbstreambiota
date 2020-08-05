@@ -1,5 +1,5 @@
 ---
-title: "Assessing and understanding in-stream habitat suitability for invertebrate families, fish species and platypus of the Melbourne region with the melbstreambiota package"
+title: "Assessing and understanding in-stream habitat suitability for invertebrate families, fish species and platypus of the Melbourne Region with the melbstreambiota package"
 author: "Christopher J. Walsh"
 date: "`30 May 2017"
 output: rmarkdown::html_vignette
@@ -15,6 +15,7 @@ require(knitr)
 require(melbstreambiota)
 modFams <- paste(taxon.classes$family, taxon.classes$fam, sep = ", ")
 ```
+
 
 ##Introduction  
 

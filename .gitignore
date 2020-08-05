@@ -6,3 +6,5 @@ data/sri48moW.rda
 data/mwStreamsMap.rda
 data/.RData
 data/.Rhistory
+.Rproj.user
+man/*.Rd
