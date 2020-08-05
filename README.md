@@ -32,9 +32,11 @@ https://tools.thewerg.unimelb.edu.au/LUMaR/
 
 Download instructions from that site follow:  
 
-install.packages('https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.1.tar.gz', repos = NULL, type = 'source')
+install.packages('https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.1.tar.gz', repos = NULL, type = 'source')  
+
 Please note that the package is 665 Mb, and can take ~15 min to install once it is downloaded on a powerful computer. 
-(Once it is installed, it is quick to load and use).
+(Once it is installed, it is quick to load and use).  
+
 Associated resources for using the package:  
 
 - Manual, which details the usage of all package functions, and contents of all package data;
