@@ -4,10 +4,19 @@
 \alias{plotMWstreamsByVar}
 \title{Plot a map of Melbourne's streams colour-coded by a variable}
 \usage{
-plotMWstreamsByVar(var, nbreaks = 5, style = "quantile",
-  varName = "Variable", palette = "Spectral", rev = FALSE,
-  legend = TRUE, legend.cex = 1.5, fixedBreaks = NA, subcSubset = NA,
-  ...)
+plotMWstreamsByVar(
+  var,
+  nbreaks = 5,
+  style = "quantile",
+  varName = "Variable",
+  palette = "Spectral",
+  rev = FALSE,
+  legend = TRUE,
+  legend.cex = 1.5,
+  fixedBreaks = NA,
+  subcSubset = NA,
+  ...
+)
 }
 \arguments{
 \item{var}{A vector (length 8246) of variable values for each subc in mwstreams (the function assumes that the vector is in the same order as mwstreams)}

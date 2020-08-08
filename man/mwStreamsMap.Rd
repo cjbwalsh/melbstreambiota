@@ -4,14 +4,16 @@
 \name{mwStreamsMap}
 \alias{mwStreamsMap}
 \title{Map of streams of the Melbourne region}
-\format{A SpatialLinesDataDataFrame of 25945 rows (polylines) and 4 columns
+\format{
+A SpatialLinesDataDataFrame of 25945 rows (polylines) and 4 columns
 \describe{
   \item{subc}{reach ID as in \code{mwstreams}}
   \item{streamName}{Name of stream}
   \item{source}{Original source of the mapped stream line}
   \item{length_m}{length of each polyline in m (note there may be
   multiple polylines per subc and they are summed in \code{mwstreams$strLen_m)}}
-}}
+}
+}
 \source{
 Melbourne Water: a combination of their Natural Waterway and channel layers.
 This stream network is an augmented and corrected version of the DCI stream layer used

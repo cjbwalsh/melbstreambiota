@@ -4,8 +4,13 @@
 \alias{plotSensFamDiagnostics}
 \title{Which families drive differences in LUMaR between groups of sample-pairs?}
 \usage{
-plotSensFamDiagnostics(lumarObject, covariate, covariateName = "Covariate",
-  sensLinEffects, famLinEffects)
+plotSensFamDiagnostics(
+  lumarObject,
+  covariate,
+  covariateName = "Covariate",
+  sensLinEffects,
+  famLinEffects
+)
 }
 \arguments{
 \item{lumarObject}{a data.frame produced by the function \code{lumar}}

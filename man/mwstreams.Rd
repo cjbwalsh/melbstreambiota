@@ -4,7 +4,8 @@
 \name{mwstreams}
 \alias{mwstreams}
 \title{Environmental predictor variables for 8246 stream reaches (subcs) across the Melbourne region}
-\format{a data frame of 8246 rows and 61 columns
+\format{
+a data frame of 8246 rows and 61 columns
 \describe{
   \item{subc}{unique subcatchment ID corresponding to subcs in \code{mwStreamsMap}}
   \item{segmentno}{geofabric segmentno (BoM, 2011)}
@@ -106,7 +107,8 @@
   for running scenarios}
   \item{SRI_48mth_weighted}{specific to samples but set to 1 (i.e. the 48-month linearly-weighted antecedent discharge
   was equivalent to the long-term mean discharge: 0.5 = half the long-term mean, 2 = twice the long-term mean)}
-  }}
+  }
+}
 \source{
 {BoM (2011) Australian hydrological geospatial fabric (geofabric) product guide. Version 2.0 – November 2011. Australian Government, Bureau of Meteorology, Canberra.\cr
  Martin, E.H., Walsh, C.J., Serena, M. & Webb, J.A. (2014) Urban stormwater runoff limits distribution of platypus. Austral Ecology, 39, 337–345.\cr

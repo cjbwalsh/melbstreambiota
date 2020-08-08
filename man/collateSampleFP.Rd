@@ -4,11 +4,18 @@
 \alias{collateSampleFP}
 \title{Collate and format sample data for applying fish or platypus model predictions}
 \usage{
-collateSampleFP(sampleTable, FishOrPlatypus = "fish",
-  AttImp_L9 = "current (2006)", AttForest_L35W1000 = "current (2006)",
-  meanAnnQ_mm = "current (2006)", mnAnnAirTm_deg = "long-term",
-  SRI_48mth_weighted = "sample date", barriersFromYear = TRUE,
-  PartBarriersDS = NA, FullBarriersDS = NA)
+collateSampleFP(
+  sampleTable,
+  FishOrPlatypus = "fish",
+  AttImp_L9 = "current (2006)",
+  AttForest_L35W1000 = "current (2006)",
+  meanAnnQ_mm = "current (2006)",
+  mnAnnAirTm_deg = "long-term",
+  SRI_48mth_weighted = "sample date",
+  barriersFromYear = TRUE,
+  PartBarriersDS = NA,
+  FullBarriersDS = NA
+)
 }
 \arguments{
 \item{sampleTable}{Table containing at least the field \code{subc}}

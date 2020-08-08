@@ -4,10 +4,12 @@
 \name{mwCoastMap}
 \alias{mwCoastMap}
 \title{Map of the Melbourne region coastline}
-\format{A SpatialLinesDataDataFrame of 37 rows (polylines) and 1 columns
+\format{
+A SpatialLinesDataDataFrame of 37 rows (polylines) and 1 columns
 \describe{
   \item{ID}{unique ID}
-}}
+}
+}
 \source{
 \url{http://land.vic.gov.au}
 }

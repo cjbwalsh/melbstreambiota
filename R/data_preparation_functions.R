@@ -61,13 +61,17 @@ collateBugSamppr <- function(sampprTable,
     }
   if (sum(!sampprTable$subc %in% melbstreambiota::mwstreams$subc) > 0)
   {
-    problems <- which(!sampprTable$subc %in% melbstreambiota::mwstreams$subc)
-    warning(paste("The following entries have no matching subc in mwstreams and were excluded from the analysis.
-                  Check their location using quickzMelMap() or in GIS.",
-                  sampprTable$subc[problems]),
+    subc_problems <- which(!sampprTable$subc %in% melbstreambiota::mwstreams$subc)
+    warning(cat("The following subc values are in the input sampprTable, but are not in the mwstreams
+table and the", length(subc_problems),"sampprs with those values were excluded from the analysis.
+Check for typos or check their location in GIS. \n",
+                  paste(unique(sampprTable$subc[subc_problems]),"\n")),
             call. = FALSE)
+    sampprTable <- sampprTable[!subc_problems,]
+    if(dim(sampprTable)[1] == 0)
+      stop("None of the supplied subc values match values in the mwstreams table.  Check your inputs \n")
   }
-    # if (sum(!sampprTable$segmentno %in% melbstreambiota::mwstreams$segmentno) > 0)
+  # if (sum(!sampprTable$segmentno %in% melbstreambiota::mwstreams$segmentno) > 0)
     #   {
     #     problems1 <- which(!sampprTable$segmentno %in% melbstreambiota::mwstreams$segmento)
     #     problems1 <- problems1[!problems1 %in% problems]
@@ -255,11 +259,15 @@ collateSampleFP <- function(sampleTable,
     stop("FishOrPlatypus must equal one of 'fish' or 'platypus'", call. = FALSE)
   if (sum(!sampleTable$subc %in% melbstreambiota::mwstreams$subc) > 0)
   {
-    problems <- which(!sampleTable$subc %in% melbstreambiota::mwstreams$subc)
-    warning(paste("The following entries have no matching subc in mwstreams and were excluded from the analysis.
-                  Check their location using quickzMelMap() or in GIS.",
-                  sampleTable$subc[problems]),
+    subc_problems <- which(!sampleTable$subc %in% melbstreambiota::mwstreams$subc)
+    warning(cat("The following subc values are in the input sampleTable, but are not in the mwstreams
+table and the", length(subc_problems),"sampprs with those values were excluded from the analysis.
+Check for typos or check their location in GIS. \n",
+                paste(unique(sampprTable$subc[subc_problems]),"\n")),
             call. = FALSE)
+    sampleTable <- sampleTable[!subc_problems,]
+    if(dim(sampleTable)[1] == 0)
+    stop("None of the supplied subc values match values in the mwstreams table.  Check your inputs \n")
   }
   if(FishOrPlatypus == "fish"){
   if (AttImp_L9[1] == "current (2006)")
@@ -346,6 +354,8 @@ collateSampleFP <- function(sampleTable,
       for (i in 1:dim(sampleTable)[1]) {
       srii <- melbstreambiota::sri48moW$SRI_48mth_weighted[melbstreambiota::sri48moW$date == lubridate::floor_date(sampleTable$date[i],"month") &
                                                             melbstreambiota::sri48moW$subc == sampleTable$subc[i]]
+      if(sum(melbstreambiota::sri48moW$subc == sampleTable$subc[i]) == 0)
+        subcErrors <- rbind()
       if (length(srii) == 0) {
         lastDate <- max(melbstreambiota::sri48moW$date[melbstreambiota::sri48moW$subc == sampleTable$subc[i]])
         lastSRI <- utils::tail(melbstreambiota::sri48moW$SRI_48mth_weighted[melbstreambiota::sri48moW$subc == sampleTable$subc[i]],1)
@@ -518,6 +528,11 @@ collateObsTable <- function(bugData, sampprTable) {
   if (length(exclFams) > 0)
     w <- c(w, "The following bugcodes were excluded as they are not used in LUMaR calculations:\n",
            paste(exclFams, collapse = ", "), ".")
+  if(sum(unique(bugsList$bugcode) %in% bugfams$bugcode[bugfams$modelled == 1]) < 59){
+    w <- c(w, cat("Your bugData does not include any entries for the following families that are used by LUMaR.
+This may, of course, be correct, but check for any unexpected omissions, and check bugcode/taxonomy. \n",
+                    paste(bugfams$bugcode[bugfams$modelled == 1 & !bugfams$bugcode %in% unique(bugsList$bugcode)],"\n")))
+  }
   if (length(w) > 0)
   warning(w, call. = FALSE)
   bugsList <- bugsList[!is.na(match(bugsList$bugcode, melbstreambiota::taxon.classes$fam)),]

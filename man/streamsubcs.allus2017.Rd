@@ -4,7 +4,9 @@
 \name{streamsubcs.allus2017}
 \alias{streamsubcs.allus2017}
 \title{A list of subcatchments each with a list of all upstream subcatchments that contain stream reaches in mwstreams}
-\format{a list of length 8257}
+\format{
+a list of length 8257
+}
 \usage{
 streamsubcs.allus2017
 }

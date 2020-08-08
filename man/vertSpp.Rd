@@ -4,13 +4,15 @@
 \name{vertSpp}
 \alias{vertSpp}
 \title{Fish species and platypus groups modelled}
-\format{a data frame of 25 rows and 4 columns
+\format{
+a data frame of 25 rows and 4 columns
 \describe{
   \item{vertcode}{the code used to identify models in the package}
   \item{species}{}
   \item{authority}{}
   \item{Commmon name}{}
-}}
+}
+}
 \usage{
 vertSpp
 }

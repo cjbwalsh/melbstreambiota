@@ -4,7 +4,8 @@
 \name{sri48moW}
 \alias{sri48moW}
 \title{Monthly 48-month linearly-weighted antecedent discharge since 1986 for all mwstream subcs}
-\format{a data frame of 2806548 rows and 3 columns
+\format{
+a data frame of 2806548 rows and 3 columns
 \describe{
   \item{date}{\code{POSIXct} date, time zone "UTC"}
   \item{subc}{subcatchment ID equivalent to \code{mwstreams$subc}}
@@ -14,7 +15,8 @@
   These data are the variant, calculated from the Australian Water Availability Project data
   (AWAP; Raupach et al. 2009) as described in Walsh (in preparation).  The \code{date} field equals
   the first of each month from Jan 1986 to Feb 2014 for most subcs, and to July 2016 for some (Main Creek,
-  French Island, Bass, Lang Lang, Yallock, and Bunyip catchments).}
+  French Island, Bass, Lang Lang, Yallock, and Bunyip catchments).
+}
 \source{
 Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate
 index of stream condition combining observed:expected ratios and sensitivity

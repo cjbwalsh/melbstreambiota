@@ -7,5 +7,4 @@ data/mwStreamsMap.rda
 data/.RData
 data/.Rhistory
 .Rproj.user
-man/*.Rd
 .DS_store

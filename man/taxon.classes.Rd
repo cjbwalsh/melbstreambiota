@@ -4,7 +4,8 @@
 \name{taxon.classes}
 \alias{taxon.classes}
 \title{Details of the 59 modelled families}
-\format{a data frame of 59 rows and 10 columns
+\format{
+a data frame of 59 rows and 10 columns
 \describe{
   \item{fam}{bugcode, consistent with EPA Victoria and AUSRIVAS conventions}
   \item{family}{family name}
@@ -15,7 +16,8 @@
   \item{SIGNAL2}{SIGNAL2 grade (Chessman 2003)}
   \item{unexp.grade}{sensitivity grade used in the LUMaR index}
   \item{sens.grade}{unexpected grade used in the LUMaR index}
-}}
+}
+}
 \source{
 Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate
 index of stream condition combining observed:expected ratios and sensitivity

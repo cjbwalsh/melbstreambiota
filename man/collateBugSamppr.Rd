@@ -4,9 +4,14 @@
 \alias{collateBugSamppr}
 \title{Collate and format sample-pair data for applying macroinvertebrate model predictions}
 \usage{
-collateBugSamppr(sampprTable, AttImp_L9 = "current (2006)",
-  AttForest_L35W1000 = "current (2006)", meanAnnQ_mm = "current (2006)",
-  mnAnnAirTm_deg = "long-term", SRI_48mth_weighted = "sample date")
+collateBugSamppr(
+  sampprTable,
+  AttImp_L9 = "current (2006)",
+  AttForest_L35W1000 = "current (2006)",
+  meanAnnQ_mm = "current (2006)",
+  mnAnnAirTm_deg = "long-term",
+  SRI_48mth_weighted = "sample date"
+)
 }
 \arguments{
 \item{sampprTable}{Table containing at least the fields \code{subc}, \code{nspring},\code{nriff},

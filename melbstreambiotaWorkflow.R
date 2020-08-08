@@ -37,3 +37,21 @@ install.packages("../melbstreambiota_0.1.1.tar.gz", repos = NULL, type = "source
 #install.packages("http://urbanstreams.net/resources/melbstreambiota_0.1.1.tar.gz", repos = NULL, type = "source")
 Sys.time() - start  #At least 10 minutes to install
 library(melbstreambiota)
+
+
+#improvements for v0.1.1
+#add a column to bugfams identifying the 59 modelled families. #done as follows
+# #Using output of  melbstreambiota::predCurrNHI59(sampprsL)
+# model_fams <- names(expTables$predCurr)[-1]
+# bugfams$modelled <- 0
+# bugfams$modelled[bugfams$bugcode %in% model_fams] <- 1
+# bugfams$family <- as.vector(bugfams$family)
+# bugfams$bugcode <- as.vector(bugfams$bugcode)
+# bugfams$Comment <- as.vector(bugfams$Commment)
+# bugfams$note <- as.vector(bugfams$note)
+# save(bugfams, file = "~/Documents/git/melbstreambiota/data/bugfams.rda", compress = "xz")
+#check if collateObsTable() should be combining QO21 with QO12....
+#convert large tables to data.tables
+#convert mapping functions to sf
+#corrections to error warnings in collateBugSamppr(), collateSampleFP(), collateObsTable()  #done
+
