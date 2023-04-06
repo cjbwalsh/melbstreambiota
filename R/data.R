@@ -1,18 +1,5 @@
 # #These data were compiled in the file
-# #""~/wergdrobo/Staff_Folders/ChrisW/newBugModelsMay2017/compileDataforMelbstreambiotaPackage.R"
-#'
-# #' Boosted Regression Tree models of 59 macroinvertebrate families.
-# #'
-# #' A list containing 59 boosted-regression tree models (class \code{gbm}).
-# #' Each list element is a model, named by the macroinvertebrate code of
-# #' the family as listed in \code{taxon.classes} and \code{bugfams}
-# #'
-# #' @format a list of 59 \code{gbm} objects
-# #'
-# #' @source Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate
-# #' index of stream condition combining observed:expected ratios and sensitivity
-# #' weightings.
-#' "bestModelsBugfams"
+# #"data-raw/compileDataforMelbstreambiotaPackage.R"
 
 #' SIGNAL and other index grades for 174 macroinvertebrate families
 #'
@@ -69,19 +56,19 @@
 #'   \item{unexp.grade}{sensitivity grade used in the LUMaR index}
 #'   \item{sens.grade}{unexpected grade used in the LUMaR index}
 #' }
-#' @source Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate
+#' @source Walsh, C. J. (2023) LUMaR: a sensitive macroinvertebrate
 #' index of stream condition combining observed:expected ratios and sensitivity
-#' weightings.
+#' weightings. OSF preprints. https://osf.io/392kv
 "taxon.classes"
 
 #' Environmental predictor variables for 8246 stream reaches (subcs) across the Melbourne region
 #'
 #' A data frame data listing environmental predictor variables for all \code{subc}
-#' values in \code{mwStreamsMap}.
+#' values in \code{mwstreams_map}.
 #'
 #' @format a data frame of 8246 rows and 61 columns
 #' \describe{
-#'   \item{subc}{unique subcatchment ID corresponding to subcs in \code{mwStreamsMap}}
+#'   \item{subc}{unique subcatchment ID corresponding to subcs in \code{mwstreams_map}}
 #'   \item{segmentno}{geofabric segmentno (BoM, 2011)}
 #'   \item{AttImp_L9}{Attenuated imperviousness in 2006 as calculated by Walsh and Webb 2014
 #'   (exponential weighting to nearest stormwater drain or stream with a half-decay
@@ -185,7 +172,7 @@
 #' @source {BoM (2011) Australian hydrological geospatial fabric (geofabric) product guide. Version 2.0 – November 2011. Australian Government, Bureau of Meteorology, Canberra.\cr
 #'  Martin, E.H., Walsh, C.J., Serena, M. & Webb, J.A. (2014) Urban stormwater runoff limits distribution of platypus. Austral Ecology, 39, 337–345.\cr
 #'  Raupach, M.R., Briggs, P.R., Haverd, V., King, E.A., Paget, M. & Trudinger, C.M. (2009) Australian Water Availability Project (AWAP): CSIRO Marine and Atmospheric Research Component: Final Report for Phase 3. The Centre for Australian Weather and Climate Research, Canberra, Australia.\cr
-#'  Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate index of stream condition combining observed:expected ratios and sensitivity weightings.\cr
+#'  Walsh, C. J. (2023) LUMaR: a sensitive macroinvertebrate index of stream condition combining observed:expected ratios and sensitivity weightings. OSF preprints. https://osf.io/392kv \cr
 #'  Walsh, C.J. & Kunapo, J. (2009) The importance of upland flow paths in determining urban effects on stream ecosystems Journal of the North American Benthological Society, 28, 977–990.\cr
 #'  Walsh, C.J. & Webb, J.A. (2013) Predicting stream macroinvertebrate assemblage composition as a function of land use, physiography and climate: a guide for strategic planning for river and water management in the Melbourne Water region. Department of Resource Management and Geography, The University of Melbourne, Melbourne.\cr
 #'  Walsh, C.J. & Webb, J.A. (2014) Spatial weighting of land use and temporal weighting of antecedent discharge improves prediction of stream condition. Landscape Ecology, 29, 1171–1185.\cr
@@ -194,7 +181,7 @@
 
 #' Map of streams of the Melbourne region
 #'
-#' A SpatialLinesDataDataFrame of all modelled reaches in the region
+#' A simple features data.frame of all modelled reaches in the region
 #'
 #' @format A SpatialLinesDataDataFrame of 25945 rows (polylines) and 4 columns
 #' \describe{
@@ -206,19 +193,21 @@
 #' }
 #' @source Melbourne Water: a combination of their Natural Waterway and channel layers.
 #' This stream network is an augmented and corrected version of the DCI stream layer used
-#' by Walsh and Webb 2013.
-"mwStreamsMap"
+#' by Walsh and Webb 2013. It has been superceded by the more correct Melbourne
+#' Water Stream network (https://tools.thewerg.unimelb.edu.au/mwstr/), which will be
+#' used for future taxon distribution models and versions of this package
+"mwstreams_map"
 
 #' Map of the Melbourne region coastline
 #'
-#' A SpatialLinesDataDataFrame of the coastline
+#' A simple features data.frame of the coastline
 #'
-#' @format A SpatialLinesDataDataFrame of 37 rows (polylines) and 1 columns
+#' @format A simple features data.frame of 37 rows (polylines) and 1 columns
 #' \describe{
 #'   \item{ID}{unique ID}
 #' }
 #' @source \url{http://land.vic.gov.au}
-"mwCoastMap"
+"mwcoast_map"
 
 #' Monthly 48-month linearly-weighted antecedent discharge since 1986 for all mwstream subcs
 #'
@@ -227,37 +216,69 @@
 #' calculated as described by Walsh and Webb (2014, 2016)
 #'
 #'
-#' @format a data frame of 2806548 rows and 3 columns
+#' @format a data frame 3 columns
 #' \describe{
 #'   \item{date}{\code{POSIXct} date, time zone "UTC"}
 #'   \item{subc}{subcatchment ID equivalent to \code{mwstreams$subc}}
 #'   \item{SRI_48mth_weighted}{48-month linearly-weighted antecedent discharge as a proportion of mean annual discharge}
 #'   }
-#'   @details The general method for \code{SRI_48mth_weighted} was described by Walsh and Webb 2014.
-#'   These data are the variant, calculated from the Australian Water Availability Project data
-#'   (AWAP; Raupach et al. 2009) as described in Walsh (in preparation).  The \code{date} field equals
-#'   the first of each month from Jan 1986 to Feb 2014 for most subcs, and to July 2016 for some (Main Creek,
-#'   French Island, Bass, Lang Lang, Yallock, and Bunyip catchments).
-#' @source Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate
+#'   @details The general method for \code{SRI_48mth_weighted} was described by
+#'   Walsh and Webb 2014. These data use mean monthly estimates of catchment
+#'   runoff derived from daily runoff estimates Australian Landscape Water
+#'   Balance (AWRA-L) model (Australian Bureau of Meteorology).  The \code{date}
+#'   field equals the first of each month from March 1981 to the end of the most
+#'   recent full year. This file is stored at https://osf.io/mcxrq/ (and
+#'   downloaded when the package is installed). It is updated early each year to
+#'   include the previous year's data. To update the cached version of this file
+#'   run the function \code{update_sri()}.
+#' @source Walsh, C. J. (2023) LUMaR: a sensitive macroinvertebrate
 #' index of stream condition combining observed:expected ratios and sensitivity
-#' weightings.
+#' weightings. OSF preprints. https://osf.io/392kv
 "sri48moW"
 
-##Added to CIs.rda, which includes CIs for Lumar, SIGNAL, SIGNAL2 and NsensFams
-##LUMaR confidence intervals
-##'
-##A data frame data of LUMaR median, and 90% confidence intervals across its range of values
-##'
-##@format a data frame of 900 rows and 4 columns
-##\describe{
-##  \item{lumar}{Observed range of LUMaR scores}
-##  \item{lwr10}{lower 90-percent confidence interval of predicted LUMaR score in 221 test sites}
-##  \item{median}{median predicted LUMaR score in 221 test sites}
-##  \item{upr10}{upper 90-percent confidence interval of predicted LUMaR score in 221 test sites}
-##  }
-##  @details See Walsh (in preparation) for derivation of these data, that are used to provide
-##  indicative confidence intervals around LUMaR predictions in diagnostic functions.
-##@source Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate
-##index of stream condition combining observed:expected ratios and sensitivity
-##weightings.
-#"lumarCIs"
+#' LUMaR confidence intervals
+#'
+#' A data frame data of LUMaR median, and 90% confidence intervals across its range of values
+#'
+#' @format a data frame of 900 rows and 4 columns
+#' \describe{
+#'   \item{lumar}{Observed range of LUMaR scores}
+#'   \item{lwr10}{lower 90-percent confidence interval of predicted LUMaR score in 221 test sites}
+#'   \item{median}{median predicted LUMaR score in 221 test sites}
+#'   \item{upr10}{upper 90-percent confidence interval of predicted LUMaR score in 221 test sites}
+#'   }
+#'   @details See Walsh (2023) for derivation of these data, that are used to provide
+#'   indicative confidence intervals around LUMaR predictions in diagnostic functions.
+#' @source Walsh, C. J. (2023) LUMaR: a sensitive macroinvertebrate
+#' index of stream condition combining observed:expected ratios and sensitivity
+#' weightings. OSF preprints. https://osf.io/392kv
+"CIs"
+
+#' Boosted Regression Tree model objects for vertebrate species
+#'
+#' 16 large \code{gbm} objects for 11 native fish species and 3 platypus models
+#'
+#' @format A list of 16 \code{gbm} objects
+#' @details See Vignette for details on the models.
+"bestModelsVerts"
+
+#' Boosted Regression Tree model objects for 59 macroinvertebrate families.
+#'
+#' A list containing 59 boosted-regression tree models (class \code{gbm}).
+#' Each list element is a model, named by the macroinvertebrate code of
+#' the family as listed in \code{taxon.classes} and \code{bugfams}
+#'
+#' @format a list of 59 \code{gbm} objects
+#'
+#' @source Walsh, C. J. (2023) LUMaR: a sensitive macroinvertebrate
+#' index of stream condition combining observed:expected ratios and sensitivity
+#' weightings. OSF preprints. https://osf.io/392kv. Also see Vignette for details.
+"bestModelsBugfams"
+
+#' Boosted Regression Tree model objects for SIGNAL and SIGNAL2
+#'
+#' 2 large \code{gbm} objects for SIGNAL and SIGNAL2
+#'
+#' @format A list of 16 \code{gbm} objects
+#' @details See Vignette for details on the models.
+"bestModelsSIGNAL"

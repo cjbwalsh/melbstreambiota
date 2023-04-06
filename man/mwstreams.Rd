@@ -7,7 +7,7 @@
 \format{
 a data frame of 8246 rows and 61 columns
 \describe{
-  \item{subc}{unique subcatchment ID corresponding to subcs in \code{mwStreamsMap}}
+  \item{subc}{unique subcatchment ID corresponding to subcs in \code{mwstreams_map}}
   \item{segmentno}{geofabric segmentno (BoM, 2011)}
   \item{AttImp_L9}{Attenuated imperviousness in 2006 as calculated by Walsh and Webb 2014
   (exponential weighting to nearest stormwater drain or stream with a half-decay
@@ -113,7 +113,7 @@ a data frame of 8246 rows and 61 columns
 {BoM (2011) Australian hydrological geospatial fabric (geofabric) product guide. Version 2.0 – November 2011. Australian Government, Bureau of Meteorology, Canberra.\cr
  Martin, E.H., Walsh, C.J., Serena, M. & Webb, J.A. (2014) Urban stormwater runoff limits distribution of platypus. Austral Ecology, 39, 337–345.\cr
  Raupach, M.R., Briggs, P.R., Haverd, V., King, E.A., Paget, M. & Trudinger, C.M. (2009) Australian Water Availability Project (AWAP): CSIRO Marine and Atmospheric Research Component: Final Report for Phase 3. The Centre for Australian Weather and Climate Research, Canberra, Australia.\cr
- Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate index of stream condition combining observed:expected ratios and sensitivity weightings.\cr
+ Walsh, C. J. (2023) LUMaR: a sensitive macroinvertebrate index of stream condition combining observed:expected ratios and sensitivity weightings. OSF preprints. https://osf.io/392kv \cr
  Walsh, C.J. & Kunapo, J. (2009) The importance of upland flow paths in determining urban effects on stream ecosystems Journal of the North American Benthological Society, 28, 977–990.\cr
  Walsh, C.J. & Webb, J.A. (2013) Predicting stream macroinvertebrate assemblage composition as a function of land use, physiography and climate: a guide for strategic planning for river and water management in the Melbourne Water region. Department of Resource Management and Geography, The University of Melbourne, Melbourne.\cr
  Walsh, C.J. & Webb, J.A. (2014) Spatial weighting of land use and temporal weighting of antecedent discharge improves prediction of stream condition. Landscape Ecology, 29, 1171–1185.\cr
@@ -124,6 +124,6 @@ mwstreams
 }
 \description{
 A data frame data listing environmental predictor variables for all \code{subc}
-values in \code{mwStreamsMap}.
+values in \code{mwstreams_map}.
 }
 \keyword{datasets}

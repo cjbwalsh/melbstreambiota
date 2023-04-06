@@ -1,28 +1,30 @@
 Package: melbstreambiota
 Type: Package
 Title: Habitat Suitability Models for Stream Biota and Macroinvertebrate Indices For The Melbourne Region
-Version: 0.1.1
-Authors@R: c(person("Chris", "Walsh", email = "cwalsh@unimelb.edu.au",
-                  role = c("aut", "cre")),
+Version: 0.1.2
+Authors@R: c(person("Christopher J", "Walsh", email = "cwalsh@unimelb.edu.au",
+                  role = c("aut", "cre","ctb")),
             person("Yung ", "En Chee", email = "yechee@unimelb.edu.au",
-                  role = c("ctb")),
+                  role = c("aut", "ctb")),
             person("Nick", "Bond", email = "n.bond@latrobe.edu.au",
-                  role = c("ctb")),
+                  role = c("aut", "ctb")),
             person("Rhys", "Coleman", email = "Rhys.Coleman@melbournewater.com.au",
-                  role = c("ctb")))
+                  role = c("aut", "ctb")))
+Date: 2023                  
 Description:
     Outputs of habitat suitability models (aka species distribution models) of 59 families 
-    of stream macroinvertebrates, 23 species of fish, and female and total platypus in
+    of stream macroinvertebrates, 11 native species of fish, and female and total platypus in
     the Melbourne (SE Australia) region. Predict fish species, platypus, and macroinvertebrate 
     family occurrence and macroinvertebrate indices  (LUMaR, SIGNAL2, number of sensitive 
     families) for any reach in the region.  Calculate the indices based on imported data 
     and compare to predicted values.  Diagnostic tools for interpreting results.
-Depends: R (>= 3.1.0) 
+Depends: R (>= 4.2.0) 
 Imports:
-  lubridate, gbm, RColorBrewer, classInt, rgdal, sp, vegan, dplyr, readxl, betareg, graphics, stats, utils, dismo
+  lubridate, gbm, RColorBrewer, classInt, rgdal, sf, vegan, dplyr, readxl, betareg, graphics, stats, utils, hoardr, osfr
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
-Suggests: knitr, rmarkdown
+LazyDataCompression: xz
+RoxygenNote: 7.1.2
+Suggests: knitr, rmarkdown, quickmapr
 VignetteBuilder: knitr

@@ -499,7 +499,7 @@ sampprDiagnostic <- function(samppri, obsTable, currentPredTable, NHIPredTable,
 #' sampprs <- collateBugSamppr(sampprs)
 #' expTables <- predCurrNHI59(sampprs)
 #' obsTable <- collateObsTable(bugData, sampprs)
-#' exampleLumar <- lumar(obsTable, expTables$predNHI)[,1:8]
+#' exampleLumar <- lumar(obsTable, expTables$predNHI)
 #' stream <- substr(exampleLumar$samppr, 1, 3)
 #' # What families explain differences in LUMaR between the two streams (BRS and OLN)
 #' famStreamEffects <- famCovariateEffects(obsTable, expTables$predNHI, stream)

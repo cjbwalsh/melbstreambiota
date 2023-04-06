@@ -3,9 +3,9 @@
 \docType{data}
 \name{bugfams}
 \alias{bugfams}
-\title{"bestModelsBugfams"
-SIGNAL and other index grades for 174 macroinvertebrate families}
-\format{a data frame of 174 rows and 9 columns
+\title{SIGNAL and other index grades for 174 macroinvertebrate families}
+\format{
+a data frame of 174 rows and 9 columns
 \describe{
   \item{fam}{bugcode, consistent with EPA Victoria and AUSRIVAS conventions}
   \item{family}{family name}
@@ -17,7 +17,8 @@ SIGNAL and other index grades for 174 macroinvertebrate families}
   \item{Rheophily index}{from Bond et al 2012}
   \item{Comment}{}
   \item{note}{}
-}}
+}
+}
 \usage{
 bugfams
 }

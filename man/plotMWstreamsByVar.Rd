@@ -5,7 +5,7 @@
 \title{Plot a map of Melbourne's streams colour-coded by a variable}
 \usage{
 plotMWstreamsByVar(
-  var,
+  map_var,
   nbreaks = 5,
   style = "quantile",
   varName = "Variable",
@@ -19,7 +19,7 @@ plotMWstreamsByVar(
 )
 }
 \arguments{
-\item{var}{A vector (length 8246) of variable values for each subc in mwstreams (the function assumes that the vector is in the same order as mwstreams)}
+\item{map_var}{A vector (length 8246) of variable values for each subc in mwstreams (the function assumes that the vector is in the same order as mwstreams)}
 
 \item{nbreaks}{number of classes to be plotted: equals n argument in classInt}
 
@@ -55,7 +55,7 @@ used to insert rounded break values.
 The "jenks" style is not implemented.
 }
 \examples{
-plotMWstreamsByVar(melbstreambiota::mwstreams$AttForest_L35W1000, style = "fixed",
+ plotMWstreamsByVar(melbstreambiota::mwstreams$AttForest_L35W1000, style = "fixed",
                    fixedBreaks = seq(0,1,0.2), varName = "Attenuated Forest Cover",
                    legend.cex = 0.75)
 }

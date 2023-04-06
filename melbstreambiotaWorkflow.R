@@ -26,13 +26,14 @@ devtools::load_all()
 devtools::document()
 #to check documentation works, produce a pdf manual (you need to rerun the document() command after each edit of the R files)
 #in terminal...
-# R CMD Rd2pdf /Users/cwalsh/Work/projects/LUMaR/packageBuild/melbstreambiota
+# R CMD Rd2pdf ~/Documents/git/melbstreambiota
 #place vignette folder elsewhere to build the package the first time
-devtools::check()
+devtools::check(cran = FALSE)
 devtools::build()
 #then check to see if the vignette knits with the package built: if so move the vignette folder back and run check and build again
-start <- Sys.time()
-install.packages("../melbstreambiota_0.1.1.tar.gz", repos = NULL, type = "source")
+system.time({
+install.packages("../melbstreambiota_0.1.2.tar.gz", repos = NULL, type = "source")
+})
 #or from the web:
 #install.packages("http://urbanstreams.net/resources/melbstreambiota_0.1.1.tar.gz", repos = NULL, type = "source")
 Sys.time() - start  #At least 10 minutes to install

@@ -11,7 +11,7 @@ lumar(obs.table, exp.table)
 Data for each samppr are 1s for observed presences and 0 for absences}
 
 \item{exp.table}{a data.frame with the same structure as obs.table, but filled with probabilities of occurrence
-as predicted by the 59 distribution models described by Walsh (in prep) under no human impact}
+as predicted by the 59 distribution models described by Walsh (2023, https://osf.io/392kv) under no human impact}
 }
 \value{
 A data frame with the same number of rows as the input tables and 14 columns: the LUMaR index and its components

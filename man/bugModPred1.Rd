@@ -34,11 +34,11 @@ be used to compile such a table
 }
 \examples{
 qt25MWstreamsCurrent <- bugModPred1("QT25",melbstreambiota::mwstreams)
-plotMWstreamsByVar(qt25MWstreamsCurrent$pred1,
-   style = "fixed", fixedBreaks = seq(0,1,0.2),
-   varName =
-    paste(melbstreambiota::taxon.classes$family[melbstreambiota::taxon.classes$fam == "QT25"],
-          "prob of occurrence"), legend.cex = 0.75)
+# plotMWstreamsByVar(qt25MWstreamsCurrent$pred1,
+#   style = "fixed", fixedBreaks = seq(0,1,0.2),
+#   varName =
+#    paste(melbstreambiota::taxon.classes$family[melbstreambiota::taxon.classes$fam == "QT25"],
+#          "prob of occurrence"), legend.cex = 0.75)
 }
 \seealso{
 \code{\link{collateBugSamppr}}, \code{\link{taxon.classes}}

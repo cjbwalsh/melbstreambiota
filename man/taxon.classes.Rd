@@ -19,9 +19,9 @@ a data frame of 59 rows and 10 columns
 }
 }
 \source{
-Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate
+Walsh, C. J. (2023) LUMaR: a sensitive macroinvertebrate
 index of stream condition combining observed:expected ratios and sensitivity
-weightings.
+weightings. OSF preprints. https://osf.io/392kv
 }
 \usage{
 taxon.classes

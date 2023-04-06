@@ -32,7 +32,7 @@ bray.2halves <- function(x)
 #' @param obs.table a data.frame with first column samppr (or row.names = samppr), and 59 columns with names = \code{taxon.classes$fam}.
 #' Data for each samppr are 1s for observed presences and 0 for absences
 #' @param exp.table a data.frame with the same structure as obs.table, but filled with probabilities of occurrence
-#' as predicted by the 59 distribution models described by Walsh (in prep) under no human impact
+#' as predicted by the 59 distribution models described by Walsh (2023, https://osf.io/392kv) under no human impact
 #' @return A data frame with the same number of rows as the input tables and 14 columns: the LUMaR index and its components
 #'#' \describe{
 #'   \item{samppr}{\code{samppr} as in input tables}
@@ -163,16 +163,16 @@ lumar <- function(obs.table, exp.table)
   lumar
 }
 
-#' All index variants considered by Walsh (in prep)
+#' All index variants considered by Walsh (2023)
 #'
-#'   Calculate all OE indices, and others, compared to LUMaR by Walsh (in prep). Note that SIGNAL indices n
+#'   Calculate all OE indices, and others, compared to LUMaR by Walsh (2023, https://osf.io/392kv). Note that SIGNAL indices
 #'   need to be calculated using the full list of families collected in samples, not just the 59 families used in this
 #'   function
 #'
 #' @param obs.table a data.frame with first column samppr (or row.names = samppr), and 59 columns with names = \code{taxon.classes$fam}.
 #' Data for each samppr are 1s for observed presences and 0 for absences
 #' @param exp.table a data.frame with the same structure as obs.table, but filled with probabilities of occurrence
-#' as predicted by the 59 distribution models described by Walsh (in prep) under no human impact
+#' as predicted by the 59 distribution models described by Walsh (2023) under no human impact
 #' @param general.threshold if not NA, a single proportion signifiying the presence-absence threshold to be applied to all families
 #' @return A data frame with the same number of rows as the input tables and 28 columns
 #'#' \describe{
@@ -216,7 +216,7 @@ lumar <- function(obs.table, exp.table)
 #' sampprs <- collateBugSamppr(sampprs)
 #' expTable <- predCurrNHI59(sampprs)$predNHI
 #' obsTable <-collateObsTable(bugData, sampprs)
-#' oestats(obsTable, expTable)
+#' oestats(obsTable[,-1], expTable[,-1])
 #' @export
 oestats <- function(obs.table, exp.table, general.threshold = NA)
 {

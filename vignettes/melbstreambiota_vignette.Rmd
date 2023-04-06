@@ -1,32 +1,41 @@
 ---
-title: "Assessing and understanding in-stream habitat suitability for invertebrate families, fish species and platypus of the Melbourne Region with the melbstreambiota package"
-author: "Christopher J. Walsh"
-date: "`30 May 2017"
+title: "Assessing and understanding in-stream habitat suitability for invertebrate families, fish species and platypus of the Melbourne Region with the melbstreambiota package (version 0.1.2)"
+author: "Christopher J. Walsh, Yung En Chee, Nick Bond, and Rhys Coleman"
+date: "6 Apr 2023"
 output: rmarkdown::html_vignette
 bibliography: melbstreambiota.bib
 csl: british-ecological-society.csl
 vignette: >
-  %\VignetteIndexEntry{Assessing and understanding in-stream habitat suitability for invertebrate families, fish species and platypus of the Melbourne Region with the melbstreambiota package}
+  %\VignetteIndexEntry{Assessing and understanding in-stream habitat suitability for invertebrate families, fish species and platypus of the Melbourne Region with the melbstreambiota package (version 0.1.2)}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
 ```{r, echo = FALSE, message=FALSE}
 require(knitr)
 require(melbstreambiota)
 modFams <- paste(taxon.classes$family, taxon.classes$fam, sep = ", ")
 ```
 
+## Introduction  
 
-##Introduction  
+The models of macroinvertebrate family distributions among streams of the Melbourne region (south-eastern Australia) described by @WalshWebb2013 and @WalshWebb2016 (later refined by @walsh_2023) allow prediction of occurrence of 59 macroinvertebrate families in all stream reaches of the region.  Associated work developed similar habitat suitability models for 11 native fish species [@chee_etal_2020] and for platypus in streams of the region.  Three models for platypus can be used in this package: 
 
-The models of macroinvertebrate family distributions among streams of the Melbourne region (south-eastern Australia) described by @WalshWebb2016 (later refined by @Walsh2017) allow prediction of occurrence of 59 macroinvertebrate families in all stream reaches of the region.  Current associated work is developing similar habitat suitability models for 25 fish species (Yung En Chee and Nick Bond) and for platypus (Rhys Coleman) in streams of the region.  The models permit predictions under current (2006) conditions and under a range of scenarios (either changes in human influence or change in climate) by adjusting the values of predictor variables.  @Walsh2017 further demonstrated that the ensemble predictions of the 59 macroinvertebrate family models produce reliable predictions of family richness, and used the models to derive an index of stream condition, LUMaR, that provides improved sensitivity to human disturbance, more consistently across the region than two commonly used indices: SIGNAL and AUSRIVAS.  LUMaR combines sensitivity weightings like those used by SIGNAL [@Chessman1995,@Chessman2003] with an observed:expected ratio such as used by AUSRIVAS [@SimpsonNorris2000].  
+- female platypus, used by @coleman_etal_2022 and @chee_etal_2020 to support Melbourne Water's Healthy Waterway Strategy [@melbournewater_2018]
 
-The melbstreambiota package provides functions that allow calculation and mapping of a) the environmental variables used as predictors in the models, b) predictions of occurrence of each macroinvertebrate family, fish species and platypus, and c) ensemble predictions of LUMaR score and other indices under different scenarios.  The package also permits the input of macroinvertebrate data collected from sites in the Melbourne region to calculate observed LUMaR score, to compare against the predicted score (this task can also be achieved using the web-based app at <a src='https://urbanstreams.net/tools/LUMaR/'>https://urbanstreams.net/tools/LUMaR/</a>,where instructions on installing this package can be found).  This vignette provides examples of the application of the melbstreambiota functions for assessing and understanding stream macroinvertebrate assemblages of the region.  
+- all platypus, used by  @chee_etal_2020.  
 
-##Which taxa have been modelled? 
+- a revised version of the all platypus model used by @coleman_etal_2022.
+
+The models permit predictions under current conditions (2006, reflecting the time data used to build the models was collected) and under a range of scenarios (either changes in human influence or change in climate) by adjusting the values of predictor variables.  @walsh_2023 further demonstrated that the ensemble predictions of the 59 macroinvertebrate family models produce reliable predictions of family richness, and used the models to derive an index of stream condition, LUMaR, that provides improved sensitivity to human disturbance, more consistently across the region than two commonly used indices: SIGNAL and AUSRIVAS.  LUMaR combines sensitivity weightings like those used by SIGNAL [@Chessman1995,@Chessman2003] with an observed:expected ratio such as used by AUSRIVAS [@SimpsonNorris2000].  
+
+The melbstreambiota package provides functions that allow calculation and mapping of a) the environmental variables used as predictors in the models, b) predictions of occurrence of each macroinvertebrate family, fish species and platypus, and c) ensemble predictions of LUMaR score and other indices under different scenarios.  The package also permits the input of macroinvertebrate data collected from sites in the Melbourne region to calculate observed LUMaR score, to compare against the predicted score (this task can also be achieved using the web-based app at [https://urbanstreams.net/tools/LUMaR/](https://urbanstreams.net/tools/LUMaR/).  This vignette provides examples of the application of the melbstreambiota functions for assessing and understanding stream macroinvertebrate assemblages of the region.  
+
+The package can be installed in R from [https://github.com/cjbwalsh/melbstreambiota](https://github.com/cjbwalsh/melbstreambiota) (see instructions in README.md below the list of files).
+
+## Which taxa have been modelled? 
 
 The 59 modelled macroinvertebrate families and their codes used in all analyses in the package are listed in the table taxon.classes:  
-
 * `r sum(grepl("QT",taxon.classes$fam))` caddisfly families (Trichoptera: `r paste(modFams[grepl("QT",taxon.classes$fam)], collapse = "; ")`)  
 
 * `r sum(grepl("QP",taxon.classes$fam))` stonefly families (Plecoptera: `r paste(modFams[grepl("QP",taxon.classes$fam)], collapse = "; ")`)  
@@ -49,33 +58,47 @@ The 59 modelled macroinvertebrate families and their codes used in all analyses 
 
 * a leech family (Glossiphoniidae, LH01), and a flatworm family (Dugesiidae, IF61).  
 
-The 25 fish species and their codes (together with codes for the two platypus models: females only and all platypus) are listed in the table vertSpp as presented below:  
+The 10 native fish species and two native lamprey species combined in a single model, and their codes---together with codes for the three platypus models: females only, all platypus [@chee_etal_2020], and all platypus [@coleman_etal_2022]---are listed in the table `vertSpp` (an object loaded with the package) (Table 1).
+   
+Table 1. Vertebrate species for which models are included in the melbstreambiota package
 
 ```{r, echo = FALSE}
 vertSppi <- vertSpp
-vertSppi$species <- paste("*",vertSppi$species,"*",sep = "")
-kable(vertSppi, col.names = c("Code","Species","Authority","Common name"))
+ft <- flextable::regulartable(vertSppi)
+ft <- flextable::italic(ft, j = 2)
+ft <- flextable::autofit(ft)
+ft <- flextable::footnote(ft, i = c(7,8), j = 4,
+                          value = flextable::as_paragraph("Lamprey species combined into a single model"),
+                          ref_symbols = c("a"),part = "body")
+ft <- flextable::footnote(ft, i = c(14,15), j = 4,
+                          value = flextable::as_paragraph(
+                            c("All platypus model used by Chee et al. 2020",
+                              "All platypus model used by Coleman et al. 2022")),
+                          ref_symbols = c("b", "c"),part = "body")
+ft
 ```
 
-##Mapping predictor variables  
+## Mapping predictor variables  
 
 The 59 boosted-regression-tree models [@ElithEtAl2008] of macroinvertebrate families are saved as model-objects in the list "bestModelsBugfams", and the fish and platypus models are saved as "bestModelsVerts", both saved in a system file that the package uses. The models predict the probability of occurrence of each taxon in a pair of rapid bioassessment samples (a standard sampling method used in the region since the early 1990s).  All 59 macroinvertebrate models use the same 10 predictor variables.  
+
 ```{r, warning=FALSE}
 require(melbstreambiota)
 exampleSamppr <- collateBugSamppr(mwstreams[1,], SRI_48mth_weighted = 1)
 names(exampleSamppr)[-1]
 ```
-These predictor variables constitute:  
 
+These predictor variables constitute:
   + 2 human-impact variables --- attenuated imperviousness (AI, or "AttImp_L9" in "mwstreams"), as described by @WalshKunapo2009, and attenuated forest cover (AF, or "AttForest_L35W1000" in mwstreams), as described by @WalshWebb2014;  
 
   + 4 variables that indicate physiographic variation across the region --- catchment area (CatchmentArea_km2_InclDams), mean annual discharge depth (meanAnnQ_mm), mean air temperature (mnAnnAirTm_deg) and proportion of catchment with igneous geology (CatIgneous);  
-
-  + A single variable that indicates temporal variation in stream flow --- linearly-weighted 48-month antecedent discharge as a fraction of the long-term mean discharge (SRI_48mth_weighted), and;  
-
+  
+  + A single variable that indicates temporal variation in stream flow --- linearly-weighted 48-month antecedent discharge as a fraction of the long-term mean discharge (SRI_48mth_weighted: see below), and;  
+  
   + 3 variables that indicate sample characteristics --- number of riffle samples (nriff: 0, 1, or 2), number of spring samples (nspring: 0, 1 or 2), sample processing method (processN 0 = lab-sorted; 1 = field-sorted).  
 
 For fish models, the same core variables were used, together with the number of partial and full barriers as additional human-impact variables.  
+
 ```{r, warning=FALSE}
 #The following command is used to build a predictor table to run fish models, setting 
 #antecedent rainfall (SRI...) at the long term average, and simulating the removal of 
@@ -86,18 +109,23 @@ exampleFishSamp <- collateSampleFP(mwstreams[1,], SRI_48mth_weighted = 1,
                                    FishOrPlatypus = "fish")
 names(exampleFishSamp)[-1]
 ```
-Note differences in the names SRI and barriers compared to those in mwstreams.  This is a temporary artefact of the current draft models.  Note also that fish (and platypus) models do not have predictor variables describing sample characteristics.  The platypus models do not use fish barriers as predictor variables, but do have additional human impact variables describing the quantity of vegetation (vegBank) and large woody debris (LWDBank).  
+
+ Note differences in the names of SRI and barriers variables compared to those in mwstreams.  These variables are equivalent, but different names were used in building the models.  Note also that fish (and platypus) models do not have predictor variables describing sample characteristics.  The platypus models do not use fish barriers as predictor variables, but do have additional human impact variables describing the quantity of vegetation (vegBank) and large woody debris (LWDBank).  Furthermore, the platypus models use forest cover in a 10-m buffer from the stream and 1-km upstream (AFb10L1000) rather than the exponentially weighted forest cover metric used by other models (AttForest_L35W1000).
 
 ```{r, warning=FALSE}
 #The same function can be used to build predictor tables for the platypus models
+
 examplePlatSamp <- collateSampleFP(mwstreams[1,], SRI_48mth_weighted = 1, 
                                    FishOrPlatypus = "platypus")
+
 names(examplePlatSamp)[-1]
 ```
+ 
+An important criterion in the selection of predictor variables for the models was that they should be generalizable to all reaches in the region, thus allowing prediction of distributions in all reaches.  The table "mwstreams" is saved as a data frame with the values of all predictor variables (and several others used for other models) for each of `r nrow(mwstreams)` reaches in the region.  This table can be joined to the simple features object "mw_stream_map" to create graduated maps indicating variation in each variable across the region using the function plotMWstreamsByVar (Fig. 1 shows 4 examples).
+                                                                                                                                        SRI_48mth_weighted values for every subcatchment for every month from December 1984 are stored in the data frame sri48moW.  This table is stored in the repository at https://osf.io/mcxrq/ (as sri48moW.rda), and updated annually. It should therefore contain SRI_48mth_weighted values until previous December in any year.  The package saves this table to the user's cache, which may become out of date: check with this command: `max(melbstreambiota::sri48moW$date)`.  To update the table in your cache run the function `update_sri.rda`.
 
-An important criterion in the selection of predictor variables for the models was that they should be generalizable to all reaches in the region, thus allowing prediction of distributions in all reaches.  The table "mwstreams" is saved as a data frame with the values of all predictor variables (and several others used for other models) for each of 8246 reaches in the region.  This table can be joined to the spatialDataFrame "MWstreamMap" to create graduated maps indicating variation in each variable across the region using the function plotMWstreamsByVar (Fig. 1 shows 4 examples).
-
-```{r, message=FALSE, fig.show='hold', fig.cap="Variation of 4 influential predictor variables across the stream network of the Melbourne region. A. meanQ (Mean annual discharge depth in mm), B. AI (proportion attenuated imperviousness), C. AF (proportion attenuated forest cover), D. MearAirT (Mean air temperature in deg C)"}
+```{r, message=FALSE, warning=FALSE,fig.show='hold', fig.width=7, fig.height=7, fig.cap="Fig. 1. Variation of 4 influential predictor variables across the stream network of the Melbourne region. A. meanQ (Mean annual discharge depth in mm), B. AI (proportion attenuated imperviousness), C. AF (proportion attenuated forest cover), D. MearAirT (Mean air temperature in deg C)"}
+par(mfrow = c(2,2))
 plotMWstreamsByVar(mwstreams$meanAnnQ_mm, varName = "meanQ", nbreaks = 8, style = "fixed",
                    fixedBreaks = c(0,10,50,100,150,200,250,400,1000), legend.cex = 0.5)
 title(main = "  A", adj = 0, line = -1.5)
@@ -117,15 +145,20 @@ Mean Annual discharge depth (Fig. 1A) was commonly a strong predictor of distrib
 
 Alternatively, a subset of the full stream network can be drawn by providing a subset of subcs to be drawn.  Two methods for deriving subsets are:  
 
-1. Use the subc names as a criterion for subsetting.  The first 4 characters of each subc indicate one of 23 subcatchments (Table 1).  All reaches in any one of these 23 subcatchments can be selected  using the grep function (as shown in Fig. 2a for the Maribyrnong catchment).  
+1. Use the subc names as a criterion for subsetting.  The first 4 characters of each subc indicate one of 23 subcatchments (Table 2).  All reaches in any one of these 23 subcatchments can be selected  using the grep function (as shown in Fig. 2a for the Maribyrnong catchment).  
+
 1. Select all reaches upstream of a known subc, using the list of all upstream subcs in the package data object streamsubcs.allus2017.rda.  Locations of subcatchments can be determined using quickMapR as described below.  Fig.2 b shows the streams of the Merri Creek catchment upstream of subc YARR8590.  
+
+Table 2.
+
 ```{r, message=FALSE, echo=FALSE}
 subcCats <- unique(substr(mwstreams$subc,1,4))
 subcCats <- subcCats[order(subcCats)]
 knitr::kable(data.frame(code = subcCats, catchment = c("Bass R", "Bunyip R", "Cardinia Ck", "Dandenong Ck", "Deep Ck (KooWeeRup Swamp)","Elster Ck","French Island streams","Kananook Ck", "Kororoit Ck", "Lang Lang R", "Laverton Ck", "Little Ck", "Main Ck (Mornington Peninsula)", "Maribyrnong R", "Mordialloc Ck", "Mornington Peninsula streams draining to Port Phillip", "Mornington Peninsula streams draining to Westernport", "Skeleton Ck", "Toomuc Ck", "Werribee R", "Phillip Island streams", "Yallock Ck", "Yarra R")), col.names = c("Code","Catchment"))
 ```
 
-```{r, message=FALSE, fig.show='hold', fig.cap="Variation in catchment area for A) the Maribyrnong River catchment and B) the Merri Creek catchment"}
+```{r, message=FALSE, fig.show='hold', fig.width=7, fig.height=5, warning=FALSE, fig.cap="Fig. 2. Variation in catchment area for A) the Maribyrnong River catchment and B) the Merri Creek catchment",fig.width=7,fig.height=3}
+par(mfrow = c(1,2))
 #Select Maribyrnong reaches by the catchment identifier in the subc names
 mariSubcs <- mwstreams$subc[grep("MARI",mwstreams$subc)]
 #Select Merri Creek reaches by identifying all reaches upstream of the most downstream reach "YARR8590"(Idenfitied by checking the map in GIS.
@@ -140,17 +173,17 @@ plotMWstreamsByVar(mwstreams$CatchmentArea_km2_InclDams, varName =
 title(main = "  B. Merri Ck", adj = 0, line = -1.5)
 ```
 
+## Predicting and mapping taxon distributions
 
-##Predicting and mapping taxon distributions
+The environmental variables in "mwstreams" permit prediction of taxon distributions under 2006 conditions and, with some manipulation, under alternative scenarios.  Predictions can be made with the "bugModPred1" function, which requires a bugcode and a table of reaches, each with values for the 10 predictor variables of the models.  @WalshWebb2016 classified families into a several sensitivity classes, and these (as modified by @walsh_2023) are listed for each taxon in the taxon.classes table. This table also lists the bugcodes and full name for each family, as well as other details.  The sensitivity classes are well illustrated by predicted distribution maps under 2006 conditions (Fig. 3).
 
-The environmental variables in "mwstreams" permit prediction of taxon distributions under 2006 conditions and, with some manipulation, under alternative scenarios.  Predictions can be made with the "bugModPred1" function, which requires a bugcode and a table of reaches, each with values for the 10 predictor variables of the models.  @WalshWebb2016 classified families into a several sensitivity classes, and these (as modified by @Walsh2017) are listed for each taxon in the taxon.classes table. This table also lists the bugcodes and full name for each family, as well as other details.  The sensitivity classes are well illustrated by predicted distribution maps under 2006 conditions (Fig. 3).
-
-```{r, message=FALSE, fig.show='hold', fig.cap="Predicted probability of occurrence of 4 indicative families. A. Leptophlebiidae (QE08, a very sensitive family) B. Leptoceridae (QT25, a moderately sensitive family), C. Caenidae (QE08, sensitive to urban stormwater runoff, positively associated with forest loss), D. Lymnaeidae (KG05, a weedy family, positively associated with human impacts."}
+```{r, message=FALSE, fig.show='hold', fig.width=7, fig.height=7, warning=FALSE,fig.cap="Fig. 3, Predicted probability of occurrence of 4 indicative families. A. Leptophlebiidae (QE08, a very sensitive family) B. Leptoceridae (QT25, a moderately sensitive family), C. Caenidae (QE08, sensitive to urban stormwater runoff, positively associated with forest loss), D. Lymnaeidae (KG05, a weedy family, positively associated with human impacts)."}
 QE06Pred <- bugModPred1("QE06", mwstreams)  #class A, a very sensitive family
 QT25Pred <- bugModPred1("QT25", mwstreams)  #class B, a moderately sensitive family
 QE08Pred <- bugModPred1("QE08", mwstreams)  #class D, sensitive to urban stormwater, 
                                             #positively associated with forest loss
 IF61Pred <- bugModPred1("IF61", mwstreams)  #class weedy
+par(mfrow = c(2,2))
 plotMWstreamsByVar(QE06Pred$pred1,
                    varName = paste(taxon.classes$family[taxon.classes$fam == "QE06"], 
                                    "prob of occurrence"),
@@ -181,16 +214,17 @@ Very sensitive families such as leptophlebid mayflies (Fig. 3A) have very low pr
 
 Similar predictions of occurrence for fish species and platypus can be also be mapped (Fig. 4).
 
-```{r, message=FALSE, warning=FALSE, fig.show='hold', fig.cap="Predicted probability of occurrence of: A. Southern short-finned eel B. common galaxias, C. mosquitofish, D. (total) Platypus"}
+```{r, message=FALSE, warning=FALSE, fig.show='hold', fig.width=7, fig.height=7, fig.cap="Fig. 4. Predicted probability of occurrence of: A. Southern short-finned eel B. common galaxias, C. Lampreys (two species combined), D. (total) Platypus (as modelled by Coleman et al. 2022)"}
 mwstreamsFish <- collateSampleFP(mwstreams, SRI_48mth_weighted = 1, FishOrPlatypus = "fish",
                                  barriersFromYear = FALSE, 
                                  PartBarriersDS = mwstreams$nPartBarriersDS_2016, 
                                  FullBarriersDS = mwstreams$nFullBarriersDS_2014)
 angaust2006 <- vertPred("ANGUAUST", mwstreamsFish)
 galamacu2006 <- vertPred("GALAMACU", mwstreamsFish)
-gambholb2006 <- vertPred("GAMBHOLB", mwstreamsFish)
+lampreys2006 <- vertPred("LAMPREYS", mwstreamsFish)
 mwstreamsPlat <- collateSampleFP(mwstreams, SRI_48mth_weighted = 1, FishOrPlatypus = "platypus")
-allplaty2006 <- vertPred("allPlaty", mwstreamsPlat)
+allplaty2006 <- vertPred("allPlatyColeman", mwstreamsPlat)
+par(mfrow = c(2,2))
 plotMWstreamsByVar(angaust2006,
                    varName = paste(vertSpp$species[vertSpp$vertcode == "ANGUAUST"], 
                                    "prob of capture"),
@@ -203,8 +237,8 @@ plotMWstreamsByVar(galamacu2006,
                    nbreaks = 5, style = "fixed",
                    fixedBreaks = c(0,0.1,0.2,0.3,0.5,1), legend.cex = 0.5)
 title(main = "  B", adj = 0, line = -1.5)
-plotMWstreamsByVar(gambholb2006,
-                   varName = paste(vertSpp$species[vertSpp$vertcode == "GAMBHOLB"], 
+plotMWstreamsByVar(lampreys2006,
+                   varName = paste(vertSpp$species[vertSpp$vertcode == "LAMPREYS"], 
                                    "prob of capture"),
                    nbreaks = 5, style = "fixed",
                    fixedBreaks = c(0,0.1,0.2,0.3,0.5,1), legend.cex = 0.5)
@@ -226,7 +260,7 @@ Alternative scenarios can be explored for the distribution of each family by man
 
 * The effects of climate change could be predicted by adding a set amount to mnAnnAirTm_deg.  Long-term changes in mean annual discharge could also be simulated by changing the "meanAnnQ" variable.  Calculation of such scenarios are in progress.  
 
-```{r, message=FALSE, fig.show='hold', fig.cap="Predicted probability of occurrence of Leptoceridae under four example scenarios. A. No human impacts, B. Reafforestation of 40-m buffers along all streams of the region, C. Removal of all urban stormwater impacts, D. Increase of 2 degrees in air temperature."}
+```{r, message=FALSE, fig.show='hold', fig.width=7, fig.height=7, fig.cap="Fig. 5. Predicted probability of occurrence of Leptoceridae under four example scenarios. A. No human impacts, B. Reafforestation of 40-m buffers along all streams of the region, C. Removal of all urban stormwater impacts, D. Increase of 2 degrees in air temperature."}
 mwstreamsb40 <- mwstreams
 #simulate a 40-m forested buffer along all streams
 mwstreamsb40$AttForest_L35W1000 <- mwstreamsb40$Att.Forest_40mBuffer
@@ -241,6 +275,7 @@ mwstreamst2$mnAnnAirTm_deg[mwstreamst2$mnAnnAirTm_deg >
                              max(mwstreams$mnAnnAirTm_deg) + 0.5] <-
                    max(mwstreams$mnAnnAirTm_deg) + 0.5
 QT25t2 <- bugModPred1("QT25", mwstreamst2)
+par(mfrow = c(2,2))
 plotMWstreamsByVar(QT25Pred$pred1NHI,
                    varName = "P under no human impact",
                    nbreaks = 5, style = "fixed",
@@ -263,9 +298,9 @@ plotMWstreamsByVar(QT25t2$pred1,
 title(main = "  D", adj = 0, line = -1.5)
 ```
 
-For a moderately sensitive family such as Leptoceridae, the models predict a high probability of occurrence in all streams in the absence of human impacts (FIg. 6A).  Reafforestation of streams of the region with 40-m forested buffers is predicted to increase the probability of occurrence of Leptoceridae substantially in agricultural areas of the region, but result in little change in metropolitan streams (FIg. 6B).  The increased urban stormwater impacts that would result from the ultimate expansion of Melbourne assuing business-as-usual stormwater practice is predicted to reduce the probability of leptocerid occurrence in streams to the north and west of the city that drain urban growth areas (FIg. 6C).  An increase in mean air temperatures of 2$^\circ$C is predicted to reduce the probability of occurrence in most streams of the region, particularly small streams (Fig. 6D).
+For a moderately sensitive family such as Leptoceridae, the models predict a high probability of occurrence in all streams in the absence of human impacts (Fig. 5A).  Reafforestation of streams of the region with 40-m forested buffers is predicted to increase the probability of occurrence of Leptoceridae substantially in agricultural areas of the region, but result in little change in metropolitan streams (Fig. 5B).  The increased urban stormwater impacts that would result from the ultimate expansion of Melbourne assuing business-as-usual stormwater practice is predicted to reduce the probability of leptocerid occurrence in streams to the north and west of the city that drain urban growth areas (Fig. 5C).  An increase in mean air temperatures of 2$^\circ$C is predicted to reduce the probability of occurrence in most streams of the region, particularly small streams (Fig. 5D).
 
-##Predicting and mapping ensemble predictions and indices
+## Predicting and mapping ensemble predictions and indices
 
 LUMaR is an index of stream condition.  It can be calculated for pairs of macroinvertebrate samples collected from any reach in the region. Because every reach has an estimated value for each of the predictor variables it is also possible to predict LUMaR score for each reach without a sample.  Calculation of LUMaR with sample data will be considered below, but here, I describe the prediction of LUMaR based solely on the predictor variables.  Predicted values of LUMaR under current (2006) conditions and under no human impact can be calculated as follows:
 
@@ -275,11 +310,11 @@ LUMaR is an index of stream condition.  It can be calculated for pairs of macroi
 
 1. use the predicted current presence-absence data frame, and the predicted no-human-impact data frame as the obs.table and exp.table arguments of the "lumar" function respectively to calculate LUMaR.
 
-The "bugModPred59" function combines the above 3 steps and returns not only predicted LUMaR scores, but also SIGNAL2, and number of sensitive families.  Each of these metrics is strongly correlated with human impacts across the region (@Walsh2017).  It should be noted that the SIGNAL2 value is based only on the 59 modelled taxa: normally SIGNAL2 for a sample is calculated using all of the taxa collected.  If SIGNAL scores are of interest, then the function bugModPredSIGNAL() produces predictions of SIGNAL scores calculated using whole samples, not just the 59 modelled families.  These predictions are based on boosted regression tree models of SIGNAL and SIGNAL2 using the same set of samples as used for the 59 family models.
+The "bugModPred59" function combines the above 3 steps and returns not only predicted LUMaR scores, but also SIGNAL2, and number of sensitive families.  Each of these metrics is strongly correlated with human impacts across the region (@walsh_2023).  It should be noted that the SIGNAL2 value is based only on the 59 modelled taxa: normally SIGNAL2 for a sample is calculated using all of the taxa collected.  If SIGNAL scores are of interest, then the function bugModPredSIGNAL() produces predictions of SIGNAL scores calculated using whole samples, not just the 59 modelled families.  These predictions are based on boosted regression tree models of SIGNAL and SIGNAL2 using the same set of samples as used for the 59 family models.
 
-The predicted index values calculated by "lumar" can be mapped in the same way as for the environmental variables and individual family predictions (Fig. 7). Fig 7B and C show predictions from bugModPredSIGNAL().
+The predicted index values calculated by "lumar" can be mapped in the same way as for the environmental variables and individual family predictions (Fig. 6). Fig 6B and C show predictions from bugModPredSIGNAL().
 
-```{r, message=FALSE, fig.show='hold', fig.cap="Predicted LUMaR score (A) under 2006 conditions, (B) under no human impact, and similar contrasts for SIGNAL2 (C and D), and number of sensitive families (E and F)"}
+```{r, message=FALSE, fig.show='hold', warning=FALSE, fig.width=7, fig.height=9,fig.cap="Fig. 6. Predicted LUMaR score (A) under 2006 conditions, (B) under no human impact, and similar contrasts for SIGNAL2 (C and D), and number of sensitive families (E and F)"}
 #calculate LUMaR (in 2006 and under no human impact) for all reaches the long way...
 mwstreams59preds <- predCurrNHI59(mwstreams)
 mwstreamsCurrpa <- prob59ToPA(mwstreams59preds$predCurr)
@@ -289,7 +324,7 @@ mwstreamsNHILumar <- lumar(mwstreamsNHIpa, mwstreams59preds$predNHI)
 # and the same calculation the short way, also getting SIGNAL2 and nSensFams
 mwstreamsIndices <- bugModPred59(mwstreams)$sampprPredsLumar
 #check both methods give the same answer...
-sum(mwstreamsIndices$lumar != mwstreamsLumar$lumar)  #should be zero if they are
+# # sum(mwstreamsIndices$lumar != mwstreamsLumar$lumar)  #should be zero if they are
 #and for No human impact
 mwstreamsNHI <- mwstreams
 mwstreamsNHI$AttImp_L9 <- 0
@@ -297,6 +332,7 @@ mwstreamsNHI$AttForest_L35W1000 <- 1
 mwstreamsNHIIndices <- bugModPred59(mwstreamsNHI)$sampprPredsLumar
 #Use the bugModPredSIGNAL() function to make a matching prediction of SIGNAL2 scores
 mwsSIG <- bugModPredSIGNAL(mwstreams)
+par(mfrow = c(3,2))
 plotMWstreamsByVar(mwstreamsLumar$lumar,
                    varName = "LUMaR (2006)",
                    nbreaks = 5, style = "fixed",
@@ -329,9 +365,9 @@ plotMWstreamsByVar(mwstreamsNHIIndices$nSensFams,
 title(main = "  F", adj = 0, line = -1.5)
 ```
 
-Metropolitan streams (except the Yarra and the Maribyrnong) are associated with lowest LUMaR, SIGNAL2 scores and fewest sensitive taxa, and streams in cleared agricultural catchments also have lower LUMaR, SIGNAL2 scores and fewer sensitive taxa than upland forested streams (Fig 5A, C, E).   While all three indicators are sensitive to human impacts, the predictions of the indicators under no human impact (Fig 5B, D, F) show the advantage of LUMaR over the other two, in that it is predicted to have an equivalent score of 1 under no human impacts across the region (Fig. 5B).  In contrast, drier, lowland streams are predicted to have fewer sensitive taxa (Fig. 5F), and resultantly lower SIGNAL2 scores (Fig. 5D) under no human impact.
+Metropolitan streams (except the Yarra and the Maribyrnong) are associated with lowest LUMaR, SIGNAL2 scores and fewest sensitive taxa, and streams in cleared agricultural catchments also have lower LUMaR, SIGNAL2 scores and fewer sensitive taxa than upland forested streams (Fig 6A, C, E).   While all three indicators are sensitive to human impacts, the predictions of the indicators under no human impact (Fig 6B, D, F) show the advantage of LUMaR over the other two, in that it is predicted to have an equivalent score of 1 under no human impacts across the region (Fig. 6B).  In contrast, drier, lowland streams are predicted to have fewer sensitive taxa (Fig. 6F), and resultantly lower SIGNAL2 scores (Fig. 6D) under no human impact.
 
-##Calculating LUMaR score from macroinvertebrate samples.
+## Calculating LUMaR score from macroinvertebrate samples.
 
 Calculating LUMaR scores from collected macroinvertebrate samples requires preprocessing of sample data to produce two tables.
 
@@ -339,10 +375,10 @@ Calculating LUMaR scores from collected macroinvertebrate samples requires prepr
 
 -  Importing date data into R is often challenging, but if dates are formatted in excel, then importing the data using readxl::read_excel (see below) usually works without pain.  Dates are only necessary to calculate antecedent discharge.  If dates are unavailable, or values of "SRI_48mth_weighted" are known, this field can be supplied as an argument to "collateBugSamppr", instead of dates.
 
--  Determining the subcatchment code for each samppr will require matching site locations to reaches, which is best done in GIS using shapefiles of the "mwStreamMap" object in this package, and its associated catchment map. (I need to confirm that I can make these available on the web at the time of writing).  If subcs need to be determined for only a few sites (or if you have more than a few, and a lot of time on your hands), this could potentially be achieved in R using the "quickmapr" package, using the following commands.
+-  Determining the subcatchment code for each samppr will require matching site locations to reaches, which is best done in GIS software using both the streams layer (the "mwstreams_map" object in this package), and its associated subcatchment map. (Both layers available in `mwstreams_subcs_coast.gpkg` from the melbstreambiota open science framework repository: [https://osf.io/mcxrq/](https://osf.io/mcxrq/)).  If subcs need to be determined for only a few sites (or if you have more than a few, and a lot of time on your hands), this could potentially be achieved in R using the "quickmapr" package, using the following commands.
 
 ```{r eval=FALSE}
-  melmap <- quickmapr::qmap(mwStreamsMap, mwCoastMap, colors = c("blue","black"))
+  melmap <- quickmapr::qmap(mwstreams_map, mwcoast_map, colors = c("blue","black"))
   quickmapr::ze(melmap) #to zoom
   quickmapr::i(melmap) #to identify subc and other reach information
   quickmapr::f(melmap) #to unzoom
@@ -354,13 +390,13 @@ Calculating LUMaR scores from collected macroinvertebrate samples requires prepr
 ```{r}
 #The sample pairs table imported from an excel file (8 sample pairs)
 sampprs <- as.data.frame(readxl::read_excel(system.file("extdata","exampleData.xlsx",
-                                         package = "melbstreambiota", mustWork = TRUE),
-                                        sheet = 1))
+                                                        package = "melbstreambiota", mustWork = TRUE),
+                                            sheet = 1))
 sampprs
 #The matching macroinvertebrate data as a two-column dataset
 bugData <- as.data.frame(readxl::read_excel(system.file("extdata","exampleData.xlsx",
-                                         package = "melbstreambiota", mustWork = TRUE),
-                                        sheet = 2))
+                                                        package = "melbstreambiota", mustWork = TRUE),
+                                            sheet = 2))
 head(bugData)
 #Sheet 3 of the excel file contains the same data in a samppr-by-bugcode matrix
 ```
@@ -376,6 +412,7 @@ and format as required for the expTable argument of the "lumar" function
 
 1. run the lumar function using the obsTable and the expTable.
 
+
 ```{r}
 sampprs <- collateBugSamppr(sampprs)
 expTables <- predCurrNHI59(sampprs)
@@ -389,17 +426,18 @@ The lumar function returns a number of sub-indices that can be used to diagnose 
 Furthermore, the function calcSIGNAL() can be used to calculate SIGNAL and SIGNAL2 scores from the supplied macroinvertebrate data.  Unlike other functions in this package, it doesn't require samples be compiled into pairs of rapid bioassessment samples, although the input data.frame does require an ID field named samppr.
 (bugData).  This function calculates SIGNAL using all taxa listed in each sample, not just the 59 modelled families.  Input data format requirements are the same as for collateObsTable().  
 
+
 ```{r}
 calcSIGNAL(bugData)
 ```
 
-##Diagnostic tools: interpreting the LUMaR results
+## Diagnostic tools: interpreting the LUMaR results
 
 The melbstreambiota package includes two primary diagnostic tools for interpreting LUMaR results.  
 
-1. The "sampprDiagnostic" function permits interpretation of an observed LUMaR score at an individual site. Fig. 6 shows the output for one of the sites in the example dataset (a sample pair from Brushy Creek in the eastern suburbs of Melbourne).  
+1. The "sampprDiagnostic" function permits interpretation of an observed LUMaR score at an individual site. Fig. 7 shows the output for one of the sites in the example dataset (a sample pair from Brushy Creek in the eastern suburbs of Melbourne).  
 
-```{r, message=FALSE, fig.show='hold', fig.width = 6.5, fig.height = 4, fig.cap="Output of samppDiagnostic(), comparing the observed LUMaR score to the predicted score for 2006 conditions, and listing the most influential taxa resulting in this sampple pair scoring less than would be expected in the absence of human impacts (reference).  If the observed LUMaR score fell outside the predicted range for 2006, a second plot would be presented identifying taxa influencing that difference."}
+```{r, message=FALSE, fig.show='hold', fig.width = 6.5, fig.height = 4, fig.cap="Fig. 7. Output of samppDiagnostic(), comparing the observed LUMaR score to the predicted score for 2006 conditions, and listing the most influential taxa resulting in this sampple pair scoring less than would be expected in the absence of human impacts (reference).  If the observed LUMaR score fell outside the predicted range for 2006, a second plot would be presented identifying taxa influencing that difference."}
 #Use the same sampprs, expTables and obsTable as above
 #Use the same sampprs, expTables and obsTable as above
 sampprDiagnostic(samppri = sampprs[3,],
@@ -407,13 +445,13 @@ sampprDiagnostic(samppri = sampprs[3,],
                  NHIPredTable = expTables$predNHI)
 ```
   
-The output shows that the LUMaR score of this sample-pair falls within the predicted range for LUMaR at this site under 2006 conditions (plot on the left).  The observed score of `r round(exampleLumar$lumar[3],2)` is less than would be expected in the absence of human impacts (a score of >0.75 is predicted for such sites).  The second plot shows the influence of the most influential taxa causing the LUMaR score to be less than reference condition (i.e. no human impacts).  The taxa indicated by asterisks occurred in the sample but were unexpected, thus downweighting the LUMaR score.  These five unexpected families were weedy (see @Walsh2017 for definitions of these sensitivity classes).  Taxa without asterisks are those that were predicted to be present in the sample, but were not (thus downweighting the score).  Leptocerid, hydrobiosid, hydropsychid caddisflies, tanypod midges, elmid and psephenid beetles, gripopterygid stoneflies (all moderately sensitive, class B), leptophlebiid mayflies and scirtid beetles (very sensistive, class A), and veliid bugs and atyid shrimp (sensitive to urban impacts, less so forest loss, class C) were the primary absences driving the lower score.  The unexpected presence of several weedy species, and the unexpected absence of several moderately sensitive taxa in this sample-pair suggests that this site (Brushy Creek in suburban Mooroolbark) is degraded.
+The output shows that the LUMaR score of this sample-pair falls within the predicted range for LUMaR at this site under 2006 conditions (plot on the left).  The observed score of `r round(exampleLumar$lumar[3],2)` is less than would be expected in the absence of human impacts (a score of >0.75 is predicted for such sites).  The second plot shows the influence of the most influential taxa causing the LUMaR score to be less than reference condition (i.e. no human impacts).  The taxa indicated by asterisks occurred in the sample but were unexpected, thus downweighting the LUMaR score.  These five unexpected families were weedy (see @walsh_2023 for definitions of these sensitivity classes).  Taxa without asterisks are those that were predicted to be present in the sample, but were not (thus downweighting the score).  Leptocerid, hydrobiosid, hydropsychid caddisflies, tanypod midges, elmid and psephenid beetles, gripopterygid stoneflies (all moderately sensitive, class B), leptophlebiid mayflies and scirtid beetles (very sensistive, class A), and veliid bugs and atyid shrimp (sensitive to urban impacts, less so forest loss, class C) were the primary absences driving the lower score.  The unexpected presence of several weedy species, and the unexpected absence of several moderately sensitive taxa in this sample-pair suggests that this site (Brushy Creek in suburban Mooroolbark) is degraded.
 
-If the LUMaR score of the sample-pair was to fall outside the expected range under 2006 conditions, an additional plot would be plotted on the right, showing the influence of the most influential taxa driving that difference.  @Walsh2017 illustrated and interpreted such an example.
+If the LUMaR score of the sample-pair was to fall outside the expected range under 2006 conditions, an additional plot would be plotted on the right, showing the influence of the most influential taxa driving that difference.  @walsh_2023 illustrated and interpreted such an example.
 
 2. "plotSensFamDiagnostics" is a diagnostic tool to aid understanding of differences in LUMaR between groups of sample-pairs of among sample-pairs that are from a gradient described by a covariate.  In the example dataset in the melbstreambiota package, the eight sample pairs were collected from two streams (urban Brushy Creek, BRS, and forested Olinda Creek, OLN: see @BurnsEtAl2012 and @WalshEtAl2012 for a comparison of the urban stormwater impacts of these streams).  The LUMaR scores from Brushy Creek are substantialy lower than from Olinda Creek.  The differences in LUMaR scores as defined by the covariate argument in "plotSensFamDiagnostics" are illustrated in the first plot produced by the function (Fig. 8)
 
-```{r, message=FALSE, warning = FALSE, fig.show='hold', fig.width = 6.5, fig.height = 5.5, fig.cap="Output of plotSensFamDiagnostics(), comparing LUMaR scores in samples from Brushy Creek (BRS) and Olinda Creek (OLN)."}
+```{r, message=FALSE, warning = FALSE, fig.show='hold', fig.width = 6.5, fig.height = 5.5, fig.cap="Fig. 8. Output of plotSensFamDiagnostics(), comparing LUMaR scores in samples from Brushy Creek (BRS) and Olinda Creek (OLN)."}
 #Use the same expTables, obsTable, exampleLumar, and stream covariate as above
 # What taxa explain differences in LUMaR between the two streams (BRS and OLN)
 stream <- factor(substr(exampleLumar$samppr,1,3), levels = c("BRS","OLN"))
@@ -426,4 +464,5 @@ plotSensFamDiagnostics(exampleLumar, stream, covariateName = "stream",
 
 The bottom left plot of the "plotSensFamDiagnostics" shows the relative importance of each sensitivity group (whether it was observed and expected, or observed but unexpected).  In this example, the primary driver of OLN sample-pairs having higher LUMaR scores than BRS sample pairs is the absence of several expected sensitive taxa from BRS that were expected and found at OLN (Obs B) and the unexpected presence of the invasive snail *Physa* (Invas) at BRS.  The plot on the right identifies the most influential sensitive families as Gripopterygidae, Leptoceridae, Hydrobiosidae and Psephenidae. 
 
-##References
+## References
+

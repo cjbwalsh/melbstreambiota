@@ -36,9 +36,9 @@ using the \code{calcSIGNAL} function..
 }
 \examples{
 mwstreamsCurrent <- bugModPred59(melbstreambiota::mwstreams)
-plotMWstreamsByVar(mwstreamsCurrent$sampprPredsLumar$lumar, nbreaks = 6,
-                   style = "fixed", fixedBreaks = c(-1,-0.25,0,0.25,0.5,0.75,1),
-                   varName = "LUMaR", legend.cex = 0.75)
+#plotMWstreamsByVar(mwstreamsCurrent$sampprPredsLumar$lumar, nbreaks = 6,
+#                   style = "fixed", fixedBreaks = c(-1,-0.25,0,0.25,0.5,0.75,1),
+ #                  varName = "LUMaR", legend.cex = 0.75)
 }
 \seealso{
 \code{\link{collateObsTable}}, \code{\link{bugModPred1}}, \code{\link{taxon.classes}}

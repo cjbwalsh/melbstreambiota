@@ -5,22 +5,26 @@
 \alias{sri48moW}
 \title{Monthly 48-month linearly-weighted antecedent discharge since 1986 for all mwstream subcs}
 \format{
-a data frame of 2806548 rows and 3 columns
+a data frame 3 columns
 \describe{
   \item{date}{\code{POSIXct} date, time zone "UTC"}
   \item{subc}{subcatchment ID equivalent to \code{mwstreams$subc}}
   \item{SRI_48mth_weighted}{48-month linearly-weighted antecedent discharge as a proportion of mean annual discharge}
   }
-  @details The general method for \code{SRI_48mth_weighted} was described by Walsh and Webb 2014.
-  These data are the variant, calculated from the Australian Water Availability Project data
-  (AWAP; Raupach et al. 2009) as described in Walsh (in preparation).  The \code{date} field equals
-  the first of each month from Jan 1986 to Feb 2014 for most subcs, and to July 2016 for some (Main Creek,
-  French Island, Bass, Lang Lang, Yallock, and Bunyip catchments).
+  @details The general method for \code{SRI_48mth_weighted} was described by
+  Walsh and Webb 2014. These data use mean monthly estimates of catchment
+  runoff derived from daily runoff estimates Australian Landscape Water
+  Balance (AWRA-L) model (Australian Bureau of Meteorology).  The \code{date}
+  field equals the first of each month from March 1981 to the end of the most
+  recent full year. This file is stored at https://osf.io/mcxrq/ (and
+  downloaded when the package is installed). It is updated early each year to
+  include the previous year's data. To update the cached version of this file
+  run the function \code{update_sri()}.
 }
 \source{
-Walsh, C. J. (in preparation) LUMaR: a sensitive macroinvertebrate
+Walsh, C. J. (2023) LUMaR: a sensitive macroinvertebrate
 index of stream condition combining observed:expected ratios and sensitivity
-weightings.
+weightings. OSF preprints. https://osf.io/392kv
 }
 \usage{
 sri48moW

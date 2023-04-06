@@ -263,7 +263,7 @@ collateSampleFP <- function(sampleTable,
     warning(cat("The following subc values are in the input sampleTable, but are not in the mwstreams
 table and the", length(subc_problems),"sampprs with those values were excluded from the analysis.
 Check for typos or check their location in GIS. \n",
-                paste(unique(sampprTable$subc[subc_problems]),"\n")),
+                paste(unique(sampleTable$subc[subc_problems]),"\n")),
             call. = FALSE)
     sampleTable <- sampleTable[!subc_problems,]
     if(dim(sampleTable)[1] == 0)
@@ -416,7 +416,7 @@ Check for typos or check their location in GIS. \n",
                              "mnAnnAirTm_deg","CatIgneous","SRI_48mth_weighted", "PartBarriersDS", "FullBarriersDS")]
   }else{
     if(tolower(SRI_48mth_weighted[1]) != "sample date")
-    sampleTable <- sampleTable[c("subc","AttImpMin4k_L9","AttForest_L35W1000","meanAnnQ_mm","CatchmentArea_km2_InclDams",
+    sampleTable <- sampleTable[c("subc","AttImpMin4k_L9","AFb10L1000","meanAnnQ_mm","CatchmentArea_km2_InclDams",
                                "mnAnnAirTm_deg","CatIgneous","SRI_48mth_weighted", "LWDBank", "vegBank")]
   }
   names(sampleTable)[names(sampleTable) %in% c("SRI_48mth_weighted")]  <-   c("SRI_48_triang")
@@ -528,10 +528,11 @@ collateObsTable <- function(bugData, sampprTable) {
   if (length(exclFams) > 0)
     w <- c(w, "The following bugcodes were excluded as they are not used in LUMaR calculations:\n",
            paste(exclFams, collapse = ", "), ".")
-  if(sum(unique(bugsList$bugcode) %in% bugfams$bugcode[bugfams$modelled == 1]) < 59){
+  if(sum(unique(bugsList$bugcode) %in% melbstreambiota::bugfams$bugcode[melbstreambiota::bugfams$modelled == 1]) < 59){
     w <- c(w, cat("Your bugData does not include any entries for the following families that are used by LUMaR.
 This may, of course, be correct, but check for any unexpected omissions, and check bugcode/taxonomy. \n",
-                    paste(bugfams$bugcode[bugfams$modelled == 1 & !bugfams$bugcode %in% unique(bugsList$bugcode)],"\n")))
+                    paste(melbstreambiota::bugfams$bugcode[bugfams$modelled == 1 &
+                                              !melbstreambiota::bugfams$bugcode %in% unique(bugsList$bugcode)],"\n")))
   }
   if (length(w) > 0)
   warning(w, call. = FALSE)
@@ -574,3 +575,32 @@ for (i in 1:59) {
   }
   pa59
 }
+
+#' Update the SRI_48mth_weighted data used by the package
+#'
+#' @return  A message reporting the most recent date for which SRI_48mth_weighted data is available.
+#' @details Running this model downloads the latest version of sri48moW.rda from
+#' https://osf.io/mcxrq/ and saves it to cache for use by the package
+#' @examples
+#' update_sri()
+#' @export
+update_sri <- function(){
+  max_date <- max(sri48moW$date)
+  dl_files <- osfr::osf_ls_files(osfr::osf_retrieve_node("mcxrq"))
+  dl_files <- dl_files[dl_files$name == "sri48moW.rda",]
+  x <- invisible(hoardr::hoard()$cache_path_set("melbstreambiota", type = 'user_data_dir'))
+  dl_files <- osfr::osf_ls_files(osfr::osf_retrieve_node("mcxrq"))
+  dl_files <- dl_files[dl_files$name == "sri48moW.rda",]
+  invisible(osfr::osf_download(dl_files, path = x,
+                             conflicts = "overwrite"))
+  load(paste0(x,"/sri48moW.rda"))
+  max_date_new <- max(sri48moW$date)
+  if(max_date == max_date_new){
+    cat(paste0("Latest SRI_48mth_weighted value is for ", max_date_new,".
+               Your package data was up to date and was not updated. \n"))
+  }else{
+    cat(paste0("Latest SRI_48mth_weighted value is for ", max_date_new,".
+               Your package data has been updated. Restart R or reload the package to use the updated data.\n"))
+  }
+}
+

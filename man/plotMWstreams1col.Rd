@@ -4,10 +4,10 @@
 \alias{plotMWstreams1col}
 \title{Plot a map of Melbourne's streams (or a subset) by a single colour}
 \usage{
-plotMWstreams1col(col, subcSubset = NA, ...)
+plotMWstreams1col(line_col, subcSubset = NA, ...)
 }
 \arguments{
-\item{col}{a single colour}
+\item{line_col}{a single colour}
 
 \item{subcSubset}{if NA the whole stream network is mapped.
 If a vector of subcs (a subset of mwstreams$subc) is provided, only that subset will be mapped.}

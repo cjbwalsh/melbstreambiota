@@ -1,51 +1,48 @@
 # melbstreambiota: an R package for interrogating habitat suitability models for stream biota and macroinvertebrate indices for the Melbourne region
 
-Outputs of habitat suitability models (aka species distribution models) of 59 families 
-of stream macroinvertebrates, 23 species of fish, and female and total platypus in
-the Melbourne (SE Australia) region. Predict fish species, platypus, and macroinvertebrate 
-family occurrence and macroinvertebrate indices  (LUMaR, SIGNAL2, number of sensitive 
-families) for any reach in the region.  Calculate the indices based on imported data 
-and compare to predicted values.  Diagnostic tools for interpreting results.  
+This package provides outputs of habitat suitability models (aka species distribution models) of 59 families of stream macroinvertebrates, 11 species of native fish, and female and total platypus in the Melbourne (SE Australia) region. Predict fish species, platypus, and macroinvertebrate family occurrence and macroinvertebrate indices  (LUMaR, SIGNAL2, number of sensitive families) for any reach in the region.  Calculate the indices based on imported data and compare to predicted values.  Diagnostic tools for interpreting results.  
+
+To install the package:
+
+`install.package("devtools")` (if not already installed)
+
+`devtools::install_github("cjbwalsh/melbstreambiota", build_manual = TRUE, build_vignettes = TRUE)`
     
-The R package is non-standard, and contains several large data files:  
+Building the vignette can take 5-10 min. To install the package without the vignette:
 
-- most importantly, 84 Boosted Regression Tree Model objects which are used by the package to make predictions; but also 
+`devtools::install_github("cjbwalsh/melbstreambiota")`
 
-- a map of the stream network; and  
-
-- a table of environmental data for each of 8231 subcatchments that the network is split into, including a large table of monthly antecedent flow estimates for every subcatchment in the region.  
-
-These large data files are not kept on this github repository, so if you are building the package from source, 
-you will need to be loaded separately into your local github folders from the mirror on the
-University of Melbourne shared drive: wergStaff/ChrisW/rstudio_projects/melbstreambiota.  
-
-If you have access to this folder, you should copy the following 3 files to the appropriate directory:  
-
-- R/sysdata.R (the model data)  
-
-- data/sri48moW.rda (the antecedent flow data. Warning. do not copy any of the earlier versions of this file)  
-
-- data/mwStreamsMap.rda
-
-The compiled package is publicly available at 
-https://tools.thewerg.unimelb.edu.au/LUMaR/  
-
-Download instructions from that site follow:  
-
-install.packages('https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.1.tar.gz', repos = NULL, type = 'source')  
-
-Please note that the package is 665 Mb, and can take ~15 min to install once it is downloaded on a powerful computer. 
-(Once it is installed, it is quick to load and use).  
+The package draws large data files from an associated Open Science Framework repository (https://osf.io/mcxrq), and stores them in the user's cache.  The file of antecedent flow conditions (sri48moW.rda) is updated annually (in the first two months of the year). After installing the package this file can be updated using the function `update_sri()`.
 
 Associated resources for using the package:  
 
 - Manual, which details the usage of all package functions, and contents of all package data;
-https://tools.thewerg.unimelb.edu.au/documents/melbstreambiota.pdf  
+https://osf.io/79kdp 
 
 - Vignette, which illustrates the functions of the package with worked examples.
-https://tools.thewerg.unimelb.edu.au/documents/melbstreambiota_vignette.pdf  
+https://osf.io/v2tda  
 
+- Pre-print manuscript describing the LUMaR index (held back until improved models are developed)
+https://doi.org/10.31219/osf.io/392kv
 
 Old versions available at:  
 
 - https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.0.tar.gz
+
+- https://tools.thewerg.unimelb.edu.au/documents/misc/melbstreambiota_0.1.1.tar.gz
+
+Changes from 0.1.1 to version 0.1.2
+
+- Fish and platypus models have been revised.  Only 11 native fish species are retained from the original 23. An additional female platypus model has been added to match published work (see Vignette)
+
+- Partial fish barrier predictors have been revised
+
+- Recast to permit installation from github. To achieve this the data files needed to make predictions (model objects and antecedent flow predictors) are downloaded as necessary (for each function) from an associated Open Science Framework repository ([https://osf.io/mcxrq/](https://osf.io/mcxrq/)) and cached in a user-specific data directory.
+
+- Spatial data objects in the package have been converted to simple features objects, and all mapping functions converted to plotting with the sf package (from sp).
+
+- The subcatchment layer (subcs) for the stream network is not used in the package, but is useful for identifying subc ids for sampling sites (and other stream network analysis). It is now stored (with a copy of the streams and coast layers) in an associated Open Science Framework repository ([https://osf.io/mcxrq/](https://osf.io/mcxrq/)).
+
+- sri48moW data updated, and the function `update_sri()` added to permit updating of these data without the need to update the package.
+
+- The vignette has been edited to reflect the above changes.

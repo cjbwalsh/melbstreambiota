@@ -19,11 +19,11 @@
 #' @seealso \code{\link{collateBugSamppr}}, \code{\link{taxon.classes}}
 #' @examples
 #' qt25MWstreamsCurrent <- bugModPred1("QT25",melbstreambiota::mwstreams)
-#' plotMWstreamsByVar(qt25MWstreamsCurrent$pred1,
-#'    style = "fixed", fixedBreaks = seq(0,1,0.2),
-#'    varName =
-#'     paste(melbstreambiota::taxon.classes$family[melbstreambiota::taxon.classes$fam == "QT25"],
-#'           "prob of occurrence"), legend.cex = 0.75)
+#' # plotMWstreamsByVar(qt25MWstreamsCurrent$pred1,
+#' #   style = "fixed", fixedBreaks = seq(0,1,0.2),
+#' #   varName =
+#' #    paste(melbstreambiota::taxon.classes$family[melbstreambiota::taxon.classes$fam == "QT25"],
+#' #          "prob of occurrence"), legend.cex = 0.75)
 #' @export
 bugModPred1 <- function(bugcode,
                         sampprPreds)
@@ -128,9 +128,9 @@ predCurrNHI59 <- function(sampprPreds)
 #' @seealso \code{\link{collateBugSamppr}}, \code{\link{bugModPred1}}, \code{\link{taxon.classes}}
 #' @examples
 #' mwstreamsCurrent <- bugModPred59(melbstreambiota::mwstreams)
-#' plotMWstreamsByVar(mwstreamsCurrent$sampprPredsLumar$lumar, nbreaks = 6,
-#'                    style = "fixed", fixedBreaks = c(-1,-0.25,0,0.25,0.5,0.75,1),
-#'                    varName = "LUMaR", legend.cex = 0.75)
+#' # plotMWstreamsByVar(mwstreamsCurrent$sampprPredsLumar$lumar, nbreaks = 6,
+#' #                   style = "fixed", fixedBreaks = c(-1,-0.25,0,0.25,0.5,0.75,1),
+#' #                   varName = "LUMaR", legend.cex = 0.75)
 #' @export
 bugModPred59 <- function(sampprPreds)
 {
@@ -183,9 +183,9 @@ bugModPred59 <- function(sampprPreds)
 #' @seealso \code{\link{collateObsTable}}, \code{\link{bugModPred1}}, \code{\link{taxon.classes}}
 #' @examples
 #' mwstreamsCurrent <- bugModPred59(melbstreambiota::mwstreams)
-#' plotMWstreamsByVar(mwstreamsCurrent$sampprPredsLumar$lumar, nbreaks = 6,
-#'                    style = "fixed", fixedBreaks = c(-1,-0.25,0,0.25,0.5,0.75,1),
-#'                    varName = "LUMaR", legend.cex = 0.75)
+#' #plotMWstreamsByVar(mwstreamsCurrent$sampprPredsLumar$lumar, nbreaks = 6,
+#' #                   style = "fixed", fixedBreaks = c(-1,-0.25,0,0.25,0.5,0.75,1),
+#'  #                  varName = "LUMaR", legend.cex = 0.75)
 #' @export
 bugModPredSIGNAL <- function(sampprPreds)
 {
