@@ -20,7 +20,7 @@ Description:
     and compare to predicted values.  Diagnostic tools for interpreting results.
 Depends: R (>= 4.2.0) 
 Imports:
-  lubridate, gbm, RColorBrewer, classInt, rgdal, sf, vegan, dplyr, readxl, betareg, graphics, stats, utils, hoardr, osfr
+  lubridate, gbm, RColorBrewer, classInt, rgdal, sf, vegan, dplyr, readxl, betareg, graphics, stats, utils, hoardr, osfr, flextable
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
