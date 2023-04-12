@@ -4,7 +4,7 @@ Title: Habitat Suitability Models for Stream Biota and Macroinvertebrate Indices
 Version: 0.1.2
 Authors@R: c(person("Christopher J", "Walsh", email = "cwalsh@unimelb.edu.au",
                   role = c("aut", "cre","ctb")),
-            person("Yung ", "En Chee", email = "yechee@unimelb.edu.au",
+            person("Yung En", "Chee", email = "yechee@unimelb.edu.au",
                   role = c("aut", "ctb")),
             person("Nick", "Bond", email = "n.bond@latrobe.edu.au",
                   role = c("aut", "ctb")),
