@@ -29,7 +29,6 @@ vertSpp <- vertSpp[vertSpp$vertcode %in% c(toupper(c("anguaust", "gadomarm", "ga
 vertSpp$vertcode[match(c("MORDMORD", "GEOTAUST","GALAOLID"),vertSpp$vertcode)] <- c("LAMPREYS","LAMPREYS","GALAORN")
 vertSpp <- rbind(vertSpp, vertSpp[nrow(vertSpp),])
 vertSpp$vertcode[vertSpp$vertcode == "allPlaty"] <- c("allPlatyHWS","allPlatyColeman")
-save(vertSpp, file = "vertSpp.rda", compress = "xz")
 
 # Replace model objects in sysdata.rda
 load("/servers/home/cwalsh/Documents/git/melbstreambiota/sysdata.rda")
@@ -41,6 +40,8 @@ for(i in c(1:7,9:12)){
 assign(vertSpp$vertcode[i], get(load(paste0(new_fish_model_dir,"/",
                                             contents[grep(vertSpp$vertcode[i],contents)]))))
 }
+save(vertSpp, file = "data/vertSpp.rda", compress = "xz")
+
 femPlaty <- get(load("~/uomShare/wergStaff/Yung En Chee/Fish-Platy-BRTs-Nov2017/FemPlatyPA.CArea+1.AirTm-1.annQ+1.AI-1.AFB+1.SRI+1.Rdata"))
 allPlatyHWS <- get(load("~/uomShare/wergStaff/Yung En Chee/Fish-Platy-BRTs-Nov2017/AllPlatyPA.CArea0.AirTm-1.annQ+1.CI0.AI-1.AFB+1.SRI+1.Rdata"))
 allPlatyColeman <- get(load("~/uomShare/wergStaff/Rhys/Platypus/BRT-model-obj-paper/Oct21/AllPlatyPA.CArea0.AirTm-1.annQ+1.AI-1.AFB+1.SRI+1.Rdata"))
@@ -50,7 +51,7 @@ bestModelsVerts <- list(ANGUAUST = ANGUAUST, GADOMARM = GADOMARM, GALABREV = GAL
                         LAMPREYS = LAMPREYS, NANNAUST = NANNAUST, PHILGRAN = PHILGRAN,
                         PSEUURVI = PSEUURVI, RETRSEMO = RETRSEMO, femPlaty = femPlaty,
                         allPlatyHWS = allPlatyHWS, allPlatyColeman = allPlatyColeman)
-save(bestModelsBugfams,bestModelsSIGNAL,bestModelsVerts,CIs, file = "sysdata.rda", compress = "xz")
+# save(bestModelsBugfams,bestModelsSIGNAL,bestModelsVerts,CIs, file = "sysdata.rda", compress = "xz")
 
 save(bestModelsBugfams, file = "~/uomShare/wergStaff/ChrisW/git-data/melbstreambiota/bestModelsBugfams.rda", compress = "xz")
 save(bestModelsSIGNAL, file = "~/uomShare/wergStaff/ChrisW/git-data/melbstreambiota/bestModelsSIGNAL.rda", compress = "xz")

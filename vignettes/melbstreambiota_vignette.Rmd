@@ -36,6 +36,7 @@ The package can be installed in R from [https://github.com/cjbwalsh/melbstreambi
 ## Which taxa have been modelled? 
 
 The 59 modelled macroinvertebrate families and their codes used in all analyses in the package are listed in the table taxon.classes:  
+
 * `r sum(grepl("QT",taxon.classes$fam))` caddisfly families (Trichoptera: `r paste(modFams[grepl("QT",taxon.classes$fam)], collapse = "; ")`)  
 
 * `r sum(grepl("QP",taxon.classes$fam))` stonefly families (Plecoptera: `r paste(modFams[grepl("QP",taxon.classes$fam)], collapse = "; ")`)  
@@ -149,13 +150,14 @@ Alternatively, a subset of the full stream network can be drawn by providing a s
 
 1. Select all reaches upstream of a known subc, using the list of all upstream subcs in the package data object streamsubcs.allus2017.rda.  Locations of subcatchments can be determined using quickMapR as described below.  Fig.2 b shows the streams of the Merri Creek catchment upstream of subc YARR8590.  
 
-Table 2.
+Table 2. subc codes begin with 4 characters specifying which of the 23 catchments/catchment groups they fall in.
 
 ```{r, message=FALSE, echo=FALSE}
 subcCats <- unique(substr(mwstreams$subc,1,4))
 subcCats <- subcCats[order(subcCats)]
 knitr::kable(data.frame(code = subcCats, catchment = c("Bass R", "Bunyip R", "Cardinia Ck", "Dandenong Ck", "Deep Ck (KooWeeRup Swamp)","Elster Ck","French Island streams","Kananook Ck", "Kororoit Ck", "Lang Lang R", "Laverton Ck", "Little Ck", "Main Ck (Mornington Peninsula)", "Maribyrnong R", "Mordialloc Ck", "Mornington Peninsula streams draining to Port Phillip", "Mornington Peninsula streams draining to Westernport", "Skeleton Ck", "Toomuc Ck", "Werribee R", "Phillip Island streams", "Yallock Ck", "Yarra R")), col.names = c("Code","Catchment"))
 ```
+
 
 ```{r, message=FALSE, fig.show='hold', fig.width=7, fig.height=5, warning=FALSE, fig.cap="Fig. 2. Variation in catchment area for A) the Maribyrnong River catchment and B) the Merri Creek catchment",fig.width=7,fig.height=3}
 par(mfrow = c(1,2))
@@ -238,8 +240,7 @@ plotMWstreamsByVar(galamacu2006,
                    fixedBreaks = c(0,0.1,0.2,0.3,0.5,1), legend.cex = 0.5)
 title(main = "  B", adj = 0, line = -1.5)
 plotMWstreamsByVar(lampreys2006,
-                   varName = paste(vertSpp$species[vertSpp$vertcode == "LAMPREYS"], 
-                                   "prob of capture"),
+                   varName = "Lampreys (2 spp.) prob of capture",
                    nbreaks = 5, style = "fixed",
                    fixedBreaks = c(0,0.1,0.2,0.3,0.5,1), legend.cex = 0.5)
 title(main = "  C", adj = 0, line = -1.5)
