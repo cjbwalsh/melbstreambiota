@@ -173,12 +173,28 @@ awra_cat_runoff_q_mm_d_str[,i] <- awra_cat_runoff_q_ML_d_str[,i]/
 #Do the initial 1-month window calculations
 system.time({
 x <- SPEI::spei(data = as.matrix(awra_cat_runoff_q_mm_d_str[,-1]),
-           scale = 1,
+           scale = 1, fit = 'ub-pwm', #without this fit argument a small percentage of results are -Inf
            kernel = list(type = "rectangular", shift=0))
 }) # 26 min min
 
 awra_cat_runoff_spei <- awra_cat_runoff_sri <- data.frame(date = awra_cat_runoff_q_mm_d_str$date,
                                                           x$fitted)
+# Still a small number of -Infs for no apprent reason.  I'm going to suggest giving them the value of the next upstream catchment
+system.time({
+for(i in 2:ncol(awra_cat_runoff_spei)){
+  for(j in 1:nrow(awra_cat_runoff_spei)){
+    if(awra_cat_runoff_spei[j,i] == -Inf) {
+      nextdsi <- subcs$nextds[subcs$subc == names(awra_cat_runoff_spei)[i]]
+      while(speii == -Inf){
+        speii <- awra_cat_runoff_spei[j,names(awra_cat_runoff_spei) == nextdsi]
+        nextdsi <- subcs$nextds[subcs$subc == nextdsi]
+      }
+      awra_cat_runoff_spei[j,i] <- speii
+    }
+      nextdsi <- subcs$nextds[subcs$subc == names(awra_cat_runoff_spei)[i]]
+  }
+}
+})
 
 system.time({
 for(i in 2:ncol(awra_cat_runoff_sri)){
