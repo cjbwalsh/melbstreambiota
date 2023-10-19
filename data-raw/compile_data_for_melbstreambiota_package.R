@@ -1,14 +1,23 @@
-# revision of melbstreambiota 28 mar 2023
+# revision of melbstreambiota 28 mar 2023: this is a record of data compilation. Addresses will not work for non-admin users
 library(melbstreambiota)
 mwStreamsMap <- sf::st_as_sf(mwStreamsMap)
 mwstreams_sf <- sf::st_read("/servers/home/cwalsh/uomShare/wergSpatial/MWRegion/Vectors/DrainsStreams/DCI2017/MWregion_streams_310117.shp")
 mwsubcs_sf <- sf::st_read("/servers/home/cwalsh/uomShare/wergSpatial/MWRegion/Vectors/Catchments/DCI2017/MWregion_subcs_260117.shp")
 mwcoast_sf <- sf::st_read("/servers/home/cwalsh/uomShare/wergSpatial/MWRegion/Vectors/Lakesetc/Melb coast9455_polyline.shp")
+# Add buffered mwregion polygon in crs 4326 for SRI calculation
+db_m <- RPostgres::dbConnect(RPostgres::Postgres(), dbname = "mwstr")
+mw_region <- sf::st_read(db_m, "region_boundary")
+# put buffer around region to ensure complete coverage with all 5-km pixels
+mw_region <- sf::st_buffer(mw_region,5000)
+mw_region_4326 <- sf::st_transform(mw_region, 4326)
+
 # Create gpkg to be placed in melbstreambiota/inst/extdata
-sf::st_write(mwstreams_sf, "~/Documents/git/melbstreambiota/inst/extdata/mwstream_map.gpkg",
+sf::st_write(mwstreams_sf, "inst/extdata/mwstream_map.gpkg",
              layer = "streams")
-sf::st_write(mwcoast_sf, "~/Documents/git/melbstreambiota/inst/extdata/mwstream_map.gpkg",
+sf::st_write(mwcoast_sf, "inst/extdata/mwstream_map.gpkg",
              layer = "coast", append = TRUE)
+sf::st_write(mw_region_4326, "inst/extdata/mwstream_map.gpkg",
+             layer = "mw_region_4326", append = TRUE)
 # Create gpkg to be placed in melbstreambiota OSF repository (that includes subcatchments as well)
 mwsubcs_sf <- mwsubcs_sf[c("subc","nextds","PPd2ol_m","geometry")]
 names(mwsubcs_sf)[3] <- "pp_d2ol_km"

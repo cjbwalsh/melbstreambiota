@@ -18,10 +18,10 @@ dl_dir <- "~/uomShare/wergData/BoM runoff/qtot_AWRALv7/"
 #   }
 
 # # But to update with the previous year, run this
-# last_year <- lubridate::year(lubridate::today()) - 1
-# file_name_web <- paste(url, "qtot_", last_year, ".nc", sep = "")
-# file_name_network <- paste(dl_dir, "qtot_", last_year, ".nc", sep = "")
-# download.file(url = file_name_web, dest = file_name_network)
+last_year <- lubridate::year(lubridate::today()) - 1
+file_name_web <- paste(url, "qtot_", last_year, ".nc", sep = "")
+file_name_network <- paste(dl_dir, "qtot_", last_year, ".nc", sep = "")
+download.file(url = file_name_web, dest = file_name_network)
 
 #list of the *.nc files
 daily_grids <- list.files(dl_dir, pattern = "\\.nc$")
@@ -34,6 +34,7 @@ daily_grid_years <- daily_grid_years[daily_grid_years > 1980]
 
 # Clip to MW region and create a stack of mean monthly runoff rasters.
 subcs <- sf::st_read("~/uomShare/wergSpatial/MWRegion/Vectors/Catchments/DCI2017/MWregion_subcs_260117.shp")
+subcs_4326 <- sf::st_transform(subcs, crs = 4326)
 #This can also be downloaded as a gpkg file from osf: See compile_data_for_melbstreambiota_package.R
 subcs$scarea <- as.numeric(sf::st_area(subcs))
 subcs_ig <- igraph::graph_from_data_frame(subcs[c("subc","nextds")])
@@ -48,17 +49,13 @@ system.time({
   }
 }) # 40 s
 
-subcs_4326 <- sf::st_transform(subcs, 4326)
-db_m <- RPostgres::dbConnect(RPostgres::Postgres(), dbname = "mwstr_dev")
-mw_region <- sf::st_read(db_m, "region_boundary")
-# put buffer around region to ensure complete coverage with all 5-km pixels
-mw_region <- sf::st_buffer(mw_region,5000)
-mw_region_4326 <- sf::st_transform(mw_region, 4326)
-mw_ext <- terra::ext(mw_region_4326)
-DBI::dbDisconnect(db_m); rm(db_m)
+# Old script reprojected the monthly raster (to crs 28355), but it is
+# better to reproject the vector subc layer to match the raster.
+subcs_4326 <- terra::vect(subcs_4326) # ~20 s
+subcs_4326 <- terra::makeValid(subcs_4326) # ~20 s
+mw_ext <- terra::buffer(terra::vect(terra::ext(subcs_4326)), 0.06)
 
 system.time({
-  rm(mw_monthly_grid)
   for(i in 1:length(daily_grid_years)){
   xi <- suppressWarnings(terra::rast(paste0(dl_dir,"/",daily_grids[i])))
   xi <- suppressWarnings(terra::crop(xi,mw_ext))
@@ -73,19 +70,15 @@ system.time({
       }
 }
   }
-}) # < 20 s
+}) # ~40 s
 
-# Old script reprojected the monthly raster (to crs 28355), but it is
-# better to reproject the vector subc layer to match the raster.
-subcs_4326 <- terra::vect(subcs_4326) # ~20 s
-subcs_4326 <- terra::makeValid(subcs_4326) # ~20 s
 
 month_ts <- seq.Date(as.Date("1981-01-01"),
                      as.Date(paste0(last_year,"-12-01")),by = "months")
 system.time({
 x <- terra::extract(mw_monthly_grid, subcs_4326, weights = TRUE,
                     exact = TRUE, fun = mean, na.rm = TRUE)
-})  # 4 min
+})  # ~3 min
 
 # x is a matrix with 16346 rows (subcs) and 469 cols (ID + 468 months)
 x <- x[,-1]
@@ -97,7 +90,7 @@ row.names(awra_local_runoff_q_mm_d) <- 1:nrow(awra_local_runoff_q_mm_d)
 # # Check sense of streamline map compared to raster for 8th month
 first_month_data <- unname(unlist(as.vector(awra_local_runoff_q_mm_d[8,-1])))
 col_bins_8 <- as.numeric(cut(first_month_data,
-                             breaks = seq(0,max(first_month_data),length = 8)))
+                             breaks = seq(0,max(first_month_data,na.rm = TRUE),length = 8)))
 col <- RColorBrewer::brewer.pal(8,"Spectral")[col_bins_8]
 
 par(mfrow = c(1,2), mar = c(0,0,0,0))
@@ -151,7 +144,7 @@ awra_cat_runoff_q_mm_d_str <- awra_cat_runoff_q_ML_d_str
 system.time({
   for(i in 2:ncol(awra_cat_runoff_q_mm_d_str)){
     if(sum(awra_cat_runoff_q_ML_d_str[,i]/
-       subcs$carea_km2[subcs$subc == names(awra_cat_runoff_q_mm_d_str)[i]] > 500) > 0) stop()
+       subcs$carea_km2[subcs$subc == names(awra_cat_runoff_q_mm_d_str)[i]] > 500, na.rm = TRUE) > 0) stop()
 awra_cat_runoff_q_mm_d_str[,i] <- awra_cat_runoff_q_ML_d_str[,i]/
   subcs$carea_km2[subcs$subc == names(awra_cat_runoff_q_mm_d_str)[i]]
 }
@@ -182,7 +175,7 @@ system.time({
 x <- SPEI::spei(data = as.matrix(awra_cat_runoff_q_mm_d_str[,-1]),
            scale = 1,
            kernel = list(type = "rectangular", shift=0))
-}) # 9 min
+}) # 26 min min
 
 awra_cat_runoff_spei <- awra_cat_runoff_sri <- data.frame(date = awra_cat_runoff_q_mm_d_str$date,
                                                           x$fitted)
