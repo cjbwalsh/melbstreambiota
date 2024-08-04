@@ -49,6 +49,9 @@ system.time({
   }
 }) # 40 s
 
+## Problem subs
+# [1] "MARI1"  "MARI3"  "MARI2"  "MARI4"  "MARI6"  "MARI16" "MARI9"  "MARI5"  "MARI21" "MARI8"  "MARI19"
+
 # Old script reprojected the monthly raster (to crs 28355), but it is
 # better to reproject the vector subc layer to match the raster.
 subcs_4326 <- terra::vect(subcs_4326) # ~20 s
@@ -71,7 +74,6 @@ system.time({
 }
   }
 }) # ~40 s
-
 
 month_ts <- seq.Date(as.Date("1981-01-01"),
                      as.Date(paste0(last_year,"-12-01")),by = "months")
@@ -128,18 +130,19 @@ for(i in 2:ncol(awra_cat_runoff_q_ML_d)){
 }) # 90 s
 
 meanqMLd_1980 <- apply(awra_cat_runoff_q_ML_d[,-(1)],2,FUN = mean)
-# col_bins_8 <- as.numeric(cut(unname(unlist(log(meanqMLd_1980))),
-#                              breaks = seq(log(min(meanqMLd_1980)),
-#                                           log(max(meanqMLd_1980)),length = 8)))
-# col <- RColorBrewer::brewer.pal(8,"Spectral")[col_bins_8]
-# par(mfrow = c(1,1))
-# plot(melbstreambiota::mwstreams_map$geom, col = col[match(melbstreambiota::mwstreams_map$subc, names(meanqMLd_1980))])
-# # Looks good
+col_bins_8 <- as.numeric(cut(unname(unlist(log(meanqMLd_1980))),
+                             breaks = seq(log(min(meanqMLd_1980)),
+                                          log(max(meanqMLd_1980)),length = 8)))
+col <- RColorBrewer::brewer.pal(8,"Spectral")[col_bins_8]
+par(mfrow = c(1,1))
+plot(melbstreambiota::mwstreams_map$geom, col = col[match(melbstreambiota::mwstreams_map$subc, names(meanqMLd_1980))])
+# Looks good
 
 # Convert back to mm/d and reduce to just those subcs in mwstreams (i.e. with stream lines)
+ # Trying without doing that
 
-awra_cat_runoff_q_ML_d_str <- awra_cat_runoff_q_ML_d[,c(1,which(names(awra_cat_runoff_q_ML_d) %in%
-                                                   melbstreambiota::mwstreams$subc))]
+awra_cat_runoff_q_ML_d_str <- awra_cat_runoff_q_ML_d
+# [,c(1,which(names(awra_cat_runoff_q_ML_d) %in% melbstreambiota::mwstreams$subc))]
 awra_cat_runoff_q_mm_d_str <- awra_cat_runoff_q_ML_d_str
 system.time({
   for(i in 2:ncol(awra_cat_runoff_q_mm_d_str)){
@@ -179,22 +182,42 @@ x <- SPEI::spei(data = as.matrix(awra_cat_runoff_q_mm_d_str[,-1]),
 
 awra_cat_runoff_spei <- awra_cat_runoff_sri <- data.frame(date = awra_cat_runoff_q_mm_d_str$date,
                                                           x$fitted)
-# Still a small number of -Infs for no apprent reason.  I'm going to suggest giving them the value of the next upstream catchment
+awra_cat_runoff_spei_bu <- awra_cat_runoff_spei
+
+# Still a fair number of -Infs for no apparent reason.  I'm going to suggest giving them the value of
+# the nearest upstream or downstream subc or the average of allupstream subcs if none nearby.
 system.time({
-for(i in 2:ncol(awra_cat_runoff_spei)){
+for(i in (2:ncol(awra_cat_runoff_spei))){
   for(j in 1:nrow(awra_cat_runoff_spei)){
     if(awra_cat_runoff_spei[j,i] == -Inf) {
-      nextdsi <- subcs$nextds[subcs$subc == names(awra_cat_runoff_spei)[i]]
-      while(speii == -Inf){
-        speii <- awra_cat_runoff_spei[j,names(awra_cat_runoff_spei) == nextdsi]
-        nextdsi <- subcs$nextds[subcs$subc == nextdsi]
+      all_ds <- as.vector(igraph::subcomponent(subcs_ig, names(awra_cat_runoff_spei)[i], "out"))
+      all_ds <- subcs$subc[all_ds[-length(all_ds)]]
+      all_ds_spei <- as.vector(awra_cat_runoff_spei[j,match(all_ds,names(awra_cat_runoff_spei))])
+      if(sum(all_ds_spei != -Inf) > 0){
+      ds_non_inf <- min(which(all_ds_spei != -Inf))
+      awra_cat_runoff_spei[j,i] <- all_ds_spei[[ds_non_inf]]
       }
-      awra_cat_runoff_spei[j,i] <- speii
+      next_us <- subcs$subc[subcs$nextds == names(awra_cat_runoff_spei)[i]]
+      next_us_spei <- as.vector(awra_cat_runoff_spei[j,match(next_us,names(awra_cat_runoff_spei))])
+      if(ds_non_inf > 1){
+        if(length(next_us) > 0){
+          if(sum(next_us_spei != -Inf) > 0){
+          awra_cat_runoff_spei[j,i] <- next_us_spei[[min(which(next_us_spei != -Inf))]]
+          }
+        }
+      }
+      if(length(next_us_spei) > 0 & length(next_us_spei) > 0){
+      if(sum(next_us_spei != -Inf) == 0 & sum(next_us_spei != -Inf) == 0){
+        allusi <- as.vector(igraph::subcomponent(subcs_ig, "WERR1753", "in"))
+        allusi <- subcs$subc[allusi[-length(allusi)]]
+        allusi_spei <-unlist(awra_cat_runoff_spei[j,match(allusi,names(awra_cat_runoff_spei))])
+        awra_cat_runoff_spei[j,i] <- mean(allusi_spei[allusi_spei != -Inf])
+      }
+        }
     }
-      nextdsi <- subcs$nextds[subcs$subc == names(awra_cat_runoff_spei)[i]]
   }
 }
-})
+}) # 8 min
 
 system.time({
 for(i in 2:ncol(awra_cat_runoff_sri)){
