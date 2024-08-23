@@ -1,7 +1,7 @@
 Package: melbstreambiota
 Type: Package
 Title: Habitat Suitability Models for Stream Biota and Macroinvertebrate Indices For The Melbourne Region
-Version: 0.1.2
+Version: 0.1.3
 Authors@R: c(person("Christopher J", "Walsh", email = "cwalsh@unimelb.edu.au",
                   role = c("aut", "cre","ctb")),
             person("Yung En", "Chee", email = "yechee@unimelb.edu.au",
@@ -20,11 +20,15 @@ Description:
     and compare to predicted values.  Diagnostic tools for interpreting results.
 Depends: R (>= 4.2.0) 
 Imports:
-  lubridate, gbm, RColorBrewer, classInt, rgdal, sf, vegan, dplyr, readxl, betareg, graphics, stats, utils, hoardr, osfr, flextable
+  lubridate, gbm, RColorBrewer, classInt, sf, vegan, terra, dplyr, readxl, betareg, graphics, stats, utils, hoardr, osfr, flextable
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
 LazyDataCompression: xz
 RoxygenNote: 7.1.2
-Suggests: knitr, rmarkdown, quickmapr
+Suggests: 
+    knitr,
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

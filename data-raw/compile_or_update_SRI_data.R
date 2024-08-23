@@ -3,7 +3,6 @@
 #### Once the script is run, upload the new sri48moW.rda to
 #### https://osf.io/mcxrq/ (over-writing the existing version)
 
-library(terra); library(dplyr)
 # AWRA source data
 url <- paste0("https://dapds00.nci.org.au/thredds/fileServer/iu04/",
               "australian-water-outlook/historical/v1/AWRALv7/")
