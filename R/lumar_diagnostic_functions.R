@@ -214,259 +214,283 @@ sensGpCovariateEffects <- function(lumarObject,covariate) {
 #'                  obsTable = obsTable, currentPredTable = expTable$predCurr,
 #'                  NHIPredTable = expTable$predNHI)
 #' @export
-sampprDiagnostic <- function(samppri, obsTable, currentPredTable, NHIPredTable,
-                             returnTable = FALSE) {
-  samppri$AttImp_L9 <- mwstreams$AttImp_L9[match(samppri$subc, mwstreams$subc)]
-  samppri$AttForest_L35W1000 <- mwstreams$AttForest_L35W1000[match(samppri$subc, mwstreams$subc)]
-  findNegInfluencesNHI <- function(obsTablei,NHIPredTablei)
-  {
-    weedy.index <- which(names(obsTablei) %in% c("QO02","QH67","LH01","KG05","IF61"))
+sampprDiagnostic <- function (samppri, obsTable, currentPredTable, NHIPredTable,
+                              returnTable = FALSE)
+{
+  samppri$AttImp_L9 <- mwstreams$AttImp_L9[match(samppri$subc,
+                                                 mwstreams$subc)]
+  samppri$AttForest_L35W1000 <- mwstreams$AttForest_L35W1000[match(samppri$subc,
+                                                                   mwstreams$subc)]
+  findNegInfluencesNHI <- function(obsTablei, NHIPredTablei) {
+    weedy.index <- which(names(obsTablei) %in% c("QO02",
+                                                 "QH67", "LH01", "KG05", "IF61"))
     weedy.pathresholds <- c(0.626, 0.428, 0.382, 0.292, 0.416)
     invas.index <- which(names(obsTablei) == "KG08")
-    obs.wt <- obsTablei*NHIPredTablei
+    obs.wt <- obsTablei * NHIPredTablei
     unexp.wt.prev <- unexp.pa.prev <- exp.prev <- exp.pa.prev <- NHIPredTablei
     unexp.wt.prev[] <- exp.prev[] <- exp.pa.prev[] <- 0
-    unexp.wt.prev[round(NHIPredTablei,3) < melbstreambiota::taxon.classes$pa.threshold] <-
-      melbstreambiota::taxon.classes$pa.threshold[round(NHIPredTablei,3) < melbstreambiota::taxon.classes$pa.threshold] - NHIPredTablei[round(NHIPredTablei,3) < melbstreambiota::taxon.classes$pa.threshold]
-    #weight unexpected occurrences by pa.threshold minus probability of occurrence (so that more unexpected occurrences are given a higher weighting)
-    exp.pa.prev[round(NHIPredTablei,3) >= melbstreambiota::taxon.classes$pa.threshold] <- 1
-    exp.prev[round(NHIPredTablei,3) >= melbstreambiota::taxon.classes$pa.threshold] <- NHIPredTablei[round(NHIPredTablei,3) >= melbstreambiota::taxon.classes$pa.threshold]
-    obs.wt.prev <- obs.wt*exp.pa.prev
-    obs.wt.sens.prev <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade*t(obs.wt.prev)))
-    exp.wt.sens.prev <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade*t(exp.prev)))
-    # unexp.wt.unexpgd.prev <- as.data.frame(t(melbstreambiota::taxon.classes$unexp.grade*t(unexp.wt.prev*obsTablei)))
-    # exp.wt.sens.prev.sum <- apply(exp.wt.sens.prev,1,FUN = sum, na.rm = TRUE)
-    # unexp.wt <- unexp.wt.unexpgd.prev/exp.wt.sens.prev.sum
-    # unexp.wt <- unexp.wt[apply(unexp.wt,2,FUN = sum) > 0]
-    obs.expdiff <- as.data.frame(t(round(t(obs.wt),3) - melbstreambiota::taxon.classes$pa.threshold))
-    obs.expdiff <- obs.expdiff*obsTablei
+    unexp.wt.prev[round(NHIPredTablei, 3) < melbstreambiota::taxon.classes$pa.threshold] <- melbstreambiota::taxon.classes$pa.threshold[round(NHIPredTablei,
+                                                                                                                                              3) < melbstreambiota::taxon.classes$pa.threshold] -
+      NHIPredTablei[round(NHIPredTablei, 3) < melbstreambiota::taxon.classes$pa.threshold]
+    exp.pa.prev[round(NHIPredTablei, 3) >= melbstreambiota::taxon.classes$pa.threshold] <- 1
+    exp.prev[round(NHIPredTablei, 3) >= melbstreambiota::taxon.classes$pa.threshold] <- NHIPredTablei[round(NHIPredTablei,
+                                                                                                            3) >= melbstreambiota::taxon.classes$pa.threshold]
+    obs.wt.prev <- obs.wt * exp.pa.prev
+    obs.wt.sens.prev <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade *
+                                          t(obs.wt.prev)))
+    exp.wt.sens.prev <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade *
+                                          t(exp.prev)))
+    obs.expdiff <- as.data.frame(t(round(t(obs.wt), 3) -
+                                     melbstreambiota::taxon.classes$pa.threshold))
+    obs.expdiff <- obs.expdiff * obsTablei
     obs.expdiff$KG08 <- -obsTablei$KG08
-    obs.expdiffPos <- obs.expdiff#WithKG08
-    obs.expdiffNeg <- obs.expdiff#WithKG08
-    obs.expdiffPos[obs.expdiff < 0] <- 0  #WithKG08
-    obs.expdiffNeg[obs.expdiff > 0] <- 0  #WithKG08
-    expdiff.prev <- as.data.frame(t(round(t(exp.prev),3) - melbstreambiota::taxon.classes$pa.threshold))
-    expdiff.prev <- expdiff.prev*exp.pa.prev #this ensures no negative numbers in this matrix
-    expdiff.prev.sens <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade*t(expdiff.prev)))
-    obs.expdiffNeg.unexp <- as.data.frame(t(melbstreambiota::taxon.classes$unexp.grade*t(obs.expdiffNeg)))[weedy.index]
+    obs.expdiffPos <- obs.expdiff
+    obs.expdiffNeg <- obs.expdiff
+    obs.expdiffPos[obs.expdiff < 0] <- 0
+    obs.expdiffNeg[obs.expdiff > 0] <- 0
+    expdiff.prev <- as.data.frame(t(round(t(exp.prev), 3) -
+                                      melbstreambiota::taxon.classes$pa.threshold))
+    expdiff.prev <- expdiff.prev * exp.pa.prev
+    expdiff.prev.sens <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade *
+                                           t(expdiff.prev)))
+    obs.expdiffNeg.unexp <- as.data.frame(t(melbstreambiota::taxon.classes$unexp.grade *
+                                              t(obs.expdiffNeg)))[weedy.index]
     if (obsTablei$KG08 == 1) {
-      obs.expdiffNeg.unexp <- cbind(obs.expdiffNeg.unexp, data.frame(KG08 = -melbstreambiota::taxon.classes$unexp.grade[melbstreambiota::taxon.classes$fam == "KG08"]))
+      obs.expdiffNeg.unexp <- data.frame(obs.expdiffNeg.unexp,
+                                         data.frame(KG08 = -melbstreambiota::taxon.classes$unexp.grade[melbstreambiota::taxon.classes$fam ==
+                                                                                                         "KG08"]))
     }
-    unexp.wt <- obs.expdiffNeg.unexp[,obs.expdiffNeg.unexp < 0]
-    if(dim(unexp.wt)[2] > 0)
-    unexp.wt <- -unexp.wt
-    absTablei <- exp.pa.prev - obsTablei*exp.pa.prev
-    abs.wt.nonweed <- absTablei[-weedy.index]*NHIPredTablei[-weedy.index]
-    abs.wt.prev.weedy <- absTablei[weedy.index]*pmax(rep(0,5),t((NHIPredTablei[weedy.index] - weedy.pathresholds)))
-    abs.wt.prev.nonweed <- abs.wt.nonweed*exp.pa.prev[-weedy.index]
-    abs.wt.sens.prev.nonweed <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade[-weedy.index]*t(abs.wt.prev.nonweed)))
-    abs.wt.sens.prev.weedy <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade[weedy.index]*t(abs.wt.prev.weedy)))
-    abs.wt <- cbind(abs.wt.sens.prev.nonweed/sum(exp.wt.sens.prev[-weedy.index]),abs.wt.sens.prev.weedy)
-    abs.wt <- abs.wt[,abs.wt > 0]
-    nunexp <- ifelse(is.null(dim(unexp.wt)[2]),0,dim(unexp.wt)[2])
-    nabs <- ifelse(is.null(dim(abs.wt)[2]),0,dim(abs.wt)[2])
-    negInfluences <- data.frame(fam = c(names(abs.wt),names(unexp.wt)),
-                                type = c(rep("Absent",nabs),rep("Unexp",nunexp)),
-                                wt = c(as.vector(t(abs.wt)),as.vector(t(unexp.wt))))
-    negInfluences <- negInfluences[order(negInfluences$wt, decreasing = TRUE),]
+    unexp.wt <- obs.expdiffNeg.unexp[which(obs.expdiffNeg.unexp < 0)]
+    if (length(unexp.wt) > 0)
+      unexp.wt <- -unexp.wt
+    absTablei <- exp.pa.prev - obsTablei * exp.pa.prev
+    abs.wt.nonweed <- absTablei[-weedy.index] * NHIPredTablei[-weedy.index]
+    abs.wt.prev.weedy <- absTablei[weedy.index] * pmax(rep(0,
+                                                           5), t((NHIPredTablei[weedy.index] - weedy.pathresholds)))
+    abs.wt.prev.nonweed <- abs.wt.nonweed * exp.pa.prev[-weedy.index]
+    abs.wt.sens.prev.nonweed <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade[-weedy.index] *
+                                                  t(abs.wt.prev.nonweed)))
+    abs.wt.sens.prev.weedy <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade[weedy.index] *
+                                                t(abs.wt.prev.weedy)))
+    abs.wt <- cbind(abs.wt.sens.prev.nonweed/sum(exp.wt.sens.prev[-weedy.index]),
+                    abs.wt.sens.prev.weedy)
+    abs.wt <- abs.wt[, abs.wt > 0]
+    nunexp <- ifelse(is.null(dim(unexp.wt)[2]), 0, dim(unexp.wt)[2])
+    nabs <- ifelse(is.null(dim(abs.wt)[2]), 0, dim(abs.wt)[2])
+    negInfluences <- data.frame(fam = c(names(abs.wt), names(unexp.wt)),
+                                type = c(rep("Absent", nabs), rep("Unexp", nunexp)),
+                                wt = c(as.vector(t(abs.wt)), as.vector(t(unexp.wt))))
+    negInfluences <- negInfluences[order(negInfluences$wt,
+                                         decreasing = TRUE), ]
     negInfluences$cumInf <- cumsum(negInfluences$wt)/sum(negInfluences$wt)
     negInfluences
   }
-  findDiffFromCurrentInfluences <- function(obsTablei,predTablei,NHIPredTablei)
-  {
-    weedy.index <- which(names(obsTablei) %in% c("QO02","QH67","LH01","KG05","IF61"))
+  findDiffFromCurrentInfluences <- function(obsTablei, predTablei,
+                                            NHIPredTablei) {
+    weedy.index <- which(names(obsTablei) %in% c("QO02",
+                                                 "QH67", "LH01", "KG05", "IF61"))
     weedy.pathresholds <- c(0.626, 0.428, 0.382, 0.292, 0.416)
-    obs.wt <- obsTablei*NHIPredTablei
-    obs.wt.curr <- obsTablei*predTablei
-    exp.prev <- exp.pa.prev <-  exp.curr.pa.prev <- NHIPredTablei  #unexp.wt.prev <-
-    exp.prev[] <- exp.pa.prev[] <- exp.curr.pa.prev[] <- 0  #unexp.wt.prev[] <-
-    # unexp.wt.prev[round(NHIPredTablei,3) < melbstreambiota::taxon.classes$pa.threshold] <-
-    #   melbstreambiota::taxon.classes$pa.threshold[round(NHIPredTablei,3) < melbstreambiota::taxon.classes$pa.threshold] - NHIPredTablei[round(NHIPredTablei,3) < melbstreambiota::taxon.classes$pa.threshold]
-    #weight unexpected occurrences by pa.threshold minus probability of occurrence (so that more unexpected occurrences are given a higher weighting)
-    exp.pa.prev[round(NHIPredTablei,3) >= melbstreambiota::taxon.classes$pa.threshold] <- 1
-    exp.prev[round(NHIPredTablei,3) >= melbstreambiota::taxon.classes$pa.threshold] <- NHIPredTablei[round(NHIPredTablei,3) >= melbstreambiota::taxon.classes$pa.threshold]
-  #the next line adjusts weedy prev weightings for observed and expected weedy families
-    absTablei <- exp.pa.prev - obsTablei*exp.pa.prev
-    exp.prev[weedy.index] <- pmax(rep(0,5),t((NHIPredTablei[weedy.index] - weedy.pathresholds)))
-    exp.wt.sens.prev <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade*t(exp.prev)))
-    exp.wt.sens.prev.sum <- apply(exp.wt.sens.prev,1,FUN = sum, na.rm = TRUE)
-    exp.curr.pa.prev[round(predTablei,3) >= melbstreambiota::taxon.classes$pa.threshold] <- 1
-    exp.curr.prev  <- exp.curr.pa.prev*NHIPredTablei*exp.pa.prev
-    exp.curr.wt.sens.prev <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade*t(exp.curr.prev)))
-
-    exp.curr.unexp <- as.data.frame(t(pmin(rep(0,5),round(t(NHIPredTablei[weedy.index]),3)
-                                                                   - weedy.pathresholds)))*
-                                          exp.curr.pa.prev[weedy.index]
+    obs.wt <- obsTablei * NHIPredTablei
+    obs.wt.curr <- obsTablei * predTablei
+    exp.prev <- exp.pa.prev <- exp.curr.pa.prev <- NHIPredTablei
+    exp.prev[] <- exp.pa.prev[] <- exp.curr.pa.prev[] <- 0
+    exp.pa.prev[round(NHIPredTablei, 3) >= melbstreambiota::taxon.classes$pa.threshold] <- 1
+    exp.prev[round(NHIPredTablei, 3) >= melbstreambiota::taxon.classes$pa.threshold] <- NHIPredTablei[round(NHIPredTablei,
+                                                                                                            3) >= melbstreambiota::taxon.classes$pa.threshold]
+    absTablei <- exp.pa.prev - obsTablei * exp.pa.prev
+    exp.prev[weedy.index] <- pmax(rep(0, 5), t((NHIPredTablei[weedy.index] -
+                                                  weedy.pathresholds)))
+    exp.wt.sens.prev <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade *
+                                          t(exp.prev)))
+    exp.wt.sens.prev.sum <- apply(exp.wt.sens.prev, 1, FUN = sum,
+                                  na.rm = TRUE)
+    exp.curr.pa.prev[round(predTablei, 3) >= melbstreambiota::taxon.classes$pa.threshold] <- 1
+    exp.curr.prev <- exp.curr.pa.prev * NHIPredTablei * exp.pa.prev
+    exp.curr.wt.sens.prev <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade *
+                                               t(exp.curr.prev)))
+    exp.curr.unexp <- as.data.frame(t(pmin(rep(0, 5), round(t(NHIPredTablei[weedy.index]),
+                                                            3) - weedy.pathresholds))) * exp.curr.pa.prev[weedy.index]
     names(exp.curr.unexp) <- melbstreambiota::taxon.classes$fam[weedy.index]
-    exp.curr.unexp.wt <- exp.curr.unexp*melbstreambiota::taxon.classes$unexp.grade[weedy.index]
-    obs.exp.curr.unexp.wt <- exp.curr.unexp.wt*obsTablei[weedy.index]
-    obs.exp.curr.unexp.wt <- obs.exp.curr.unexp.wt[,obs.exp.curr.unexp.wt < 0]
-
-    #1. Present, unexpected under NHI, unexpected under current: obs.unexp.curr.unexp.wt
-    #These make the observed lumar lower than the predicted current lumar, including KG08
-    unexp.curr.unexp <- as.data.frame(t(pmin(rep(0,5),round(t(NHIPredTablei[weedy.index]),3)
-                                           - weedy.pathresholds)))*
-                                           !exp.curr.pa.prev[weedy.index]
+    exp.curr.unexp.wt <- exp.curr.unexp * melbstreambiota::taxon.classes$unexp.grade[weedy.index]
+    obs.exp.curr.unexp.wt <- exp.curr.unexp.wt * obsTablei[weedy.index]
+    obs.exp.curr.unexp.wt <- obs.exp.curr.unexp.wt[, obs.exp.curr.unexp.wt <
+                                                     0]
+    unexp.curr.unexp <- as.data.frame(t(pmin(rep(0, 5), round(t(NHIPredTablei[weedy.index]),
+                                                              3) - weedy.pathresholds))) * !exp.curr.pa.prev[weedy.index]
     names(unexp.curr.unexp) <- melbstreambiota::taxon.classes$fam[weedy.index]
-    unexp.curr.unexp.wt <- unexp.curr.unexp*melbstreambiota::taxon.classes$unexp.grade[weedy.index]
-    obs.unexp.curr.unexp.wt <- unexp.curr.unexp*obsTablei[weedy.index]
-    obs.unexp.curr.unexp.wt <- obs.unexp.curr.unexp.wt[,obs.unexp.curr.unexp.wt < 0]
-    if(obsTablei$KG08 == 1 & exp.curr.pa.prev$KG08 == 0)
+    unexp.curr.unexp.wt <- unexp.curr.unexp * melbstreambiota::taxon.classes$unexp.grade[weedy.index]
+    obs.unexp.curr.unexp.wt <- unexp.curr.unexp * obsTablei[weedy.index]
+    obs.unexp.curr.unexp.wt <- obs.unexp.curr.unexp.wt[,
+                                                       obs.unexp.curr.unexp.wt < 0]
+    if (obsTablei$KG08 == 1 & exp.curr.pa.prev$KG08 == 0)
       obs.unexp.curr.unexp.wt <- cbind(obs.unexp.curr.unexp.wt,
-                                data.frame(KG08 = -melbstreambiota::taxon.classes$unexp.grade[melbstreambiota::taxon.classes$fam == "KG08"]))
-
-    #2. Absent, unexpected under NHI but expected under current: notobs.exp.curr.unexp.wt
-        #These make the observed lumar lower than the predicted current lumar,
-         #except KG08, which has the opposite effect
-    notobs.exp.curr.unexp.wt <- exp.curr.unexp.wt*!obsTablei[weedy.index]
-    notobs.exp.curr.unexp.wt <- as.data.frame(notobs.exp.curr.unexp.wt[,notobs.exp.curr.unexp.wt < 0])
-    names(notobs.exp.curr.unexp.wt) <- names(exp.curr.unexp)[!obsTablei[weedy.index] & exp.curr.unexp.wt < 0]
-    if(obsTablei$KG08 == 0 & exp.curr.pa.prev$KG08 == 1)
-    notobs.exp.curr.unexp.wt <- cbind(notobs.exp.curr.unexp.wt,
-                                      data.frame(KG08 = melbstreambiota::taxon.classes$unexp.grade[melbstreambiota::taxon.classes$fam == "KG08"]))
-
-    ##3. Present, expected under NHI, but unexpected under current: obs.expNHI.unexpCurr.sensif
-    ##These make the observed lumar higher than the predicted current lumar
-    obs.expNHI.unexpCurr <- !exp.curr.pa.prev & exp.pa.prev & obsTablei
-    obs.expNHI.unexpCurr.sensif <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade*t(exp.prev*obs.expNHI.unexpCurr)))
-    nametemp <- names(obs.expNHI.unexpCurr.sensif)[obs.expNHI.unexpCurr.sensif > 0]
-    obs.expNHI.unexpCurr.sensif <- as.data.frame(obs.expNHI.unexpCurr.sensif[,obs.expNHI.unexpCurr.sensif > 0])
+                                       data.frame(KG08 = -melbstreambiota::taxon.classes$unexp.grade[melbstreambiota::taxon.classes$fam ==
+                                                                                                       "KG08"]))
+    notobs.exp.curr.unexp.wt <- exp.curr.unexp.wt * !obsTablei[weedy.index]
+    notobs.exp.curr.unexp.wt <- as.data.frame(notobs.exp.curr.unexp.wt[,
+                                                                       notobs.exp.curr.unexp.wt < 0])
+    names(notobs.exp.curr.unexp.wt) <- names(exp.curr.unexp)[!obsTablei[weedy.index] &
+                                                               exp.curr.unexp.wt < 0]
+    if (obsTablei$KG08 == 0 & exp.curr.pa.prev$KG08 == 1) {
+      notobs.exp.curr.unexp.wt <- cbind(notobs.exp.curr.unexp.wt,
+                                        data.frame(KG08 = melbstreambiota::taxon.classes$unexp.grade[melbstreambiota::taxon.classes$fam ==
+                                                                                                       "KG08"]))
+    }
+    obs.expNHI.unexpCurr <- !exp.curr.pa.prev & exp.pa.prev &
+      obsTablei
+    obs.expNHI.unexpCurr.sensif <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade *
+                                                     t(exp.prev * obs.expNHI.unexpCurr)))
+    nametemp <- names(obs.expNHI.unexpCurr.sensif)[obs.expNHI.unexpCurr.sensif >
+                                                     0]
+    obs.expNHI.unexpCurr.sensif <- as.data.frame(obs.expNHI.unexpCurr.sensif[,
+                                                                             obs.expNHI.unexpCurr.sensif > 0])
     names(obs.expNHI.unexpCurr.sensif) <- nametemp
-
-    ##4. Absent but expected under current and NHI: notobs.exp.currNHI.wt.sens
-    #These make the observed lumar lower than the predicted current lumar
-    exp.currNHI.not.obs <- exp.pa.prev & exp.curr.pa.prev & !obsTablei
-    notobs.exp.currNHI.wt.sens <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade*t(exp.prev*exp.currNHI.not.obs)))
-    nametemp <- names(notobs.exp.currNHI.wt.sens)[notobs.exp.currNHI.wt.sens > 0]
-    notobs.exp.currNHI.wt.sens <- as.data.frame(notobs.exp.currNHI.wt.sens[,notobs.exp.currNHI.wt.sens > 0])
+    exp.currNHI.not.obs <- exp.pa.prev & exp.curr.pa.prev &
+      !obsTablei
+    notobs.exp.currNHI.wt.sens <- as.data.frame(t(melbstreambiota::taxon.classes$sens.grade *
+                                                    t(exp.prev * exp.currNHI.not.obs)))
+    nametemp <- names(notobs.exp.currNHI.wt.sens)[notobs.exp.currNHI.wt.sens >
+                                                    0]
+    notobs.exp.currNHI.wt.sens <- as.data.frame(notobs.exp.currNHI.wt.sens[,
+                                                                           notobs.exp.currNHI.wt.sens > 0])
     names(notobs.exp.currNHI.wt.sens) <- nametemp
-    if(dim(notobs.exp.currNHI.wt.sens)[2] > 0){
+    if (dim(notobs.exp.currNHI.wt.sens)[2] > 0) {
       notobs.exp.currNHI.wt.sens <- -notobs.exp.currNHI.wt.sens
-}
-    dim1 <- ifelse(is.null(dim(obs.unexp.curr.unexp.wt)[2]),0,dim(obs.unexp.curr.unexp.wt)[2])
-    dim2 <- ifelse(is.null(dim(notobs.exp.curr.unexp.wt)[2]),0,dim(notobs.exp.curr.unexp.wt)[2])
-    dim3 <- ifelse(is.null(dim(obs.expNHI.unexpCurr.sensif)[2]),0,dim(obs.expNHI.unexpCurr.sensif)[2])
-    dim4 <- ifelse(is.null(dim(notobs.exp.currNHI.wt.sens)[2]),0,dim(notobs.exp.currNHI.wt.sens)[2])
+    }
+    dim1 <- ifelse(is.null(dim(obs.unexp.curr.unexp.wt)[2]),
+                   0, dim(obs.unexp.curr.unexp.wt)[2])
+    dim2 <- ifelse(is.null(dim(notobs.exp.curr.unexp.wt)[2]),
+                   0, dim(notobs.exp.curr.unexp.wt)[2])
+    dim3 <- ifelse(is.null(dim(obs.expNHI.unexpCurr.sensif)[2]),
+                   0, dim(obs.expNHI.unexpCurr.sensif)[2])
+    dim4 <- ifelse(is.null(dim(notobs.exp.currNHI.wt.sens)[2]),
+                   0, dim(notobs.exp.currNHI.wt.sens)[2])
     Influences <- data.frame(fam = c(names(obs.unexp.curr.unexp.wt),
-                                     names(notobs.exp.curr.unexp.wt),
-                                     names(obs.expNHI.unexpCurr.sensif),
-                                     names(notobs.exp.currNHI.wt.sens)),
-                             #1. Present, unexpected under NHI, unexpected under current: obs.unexp.curr.unexp.wt
-                             #2. Absent, unexpected under NHI but expected under current: notobs.exp.curr.unexp.wt                             type = c(rep("Present, unexpected under NHI, unexpected under current",dim1),
-                             #3. Present, expected under NHI, but unexpected under current: obs.expNHI.unexpCurr.sensif
-                             #4. Absent but expected under current and NHI: notobs.exp.currNHI.wt.sens
-                             type = c(rep("Present, unexpected under NHI, unexpected under current",dim1),
-                                      rep("Absent, unexpected under NHI but expected under current",dim2),
-                                      rep("Present, expected under NHI, but unexpected under current", dim3),
-                                      rep("Absent but expected under current and NHI", dim4)),
-                             wt = c(as.vector(t(obs.unexp.curr.unexp.wt)),
-                                    as.vector(t(notobs.exp.curr.unexp.wt)),
-                                    as.vector(t(obs.expNHI.unexpCurr.sensif))/exp.wt.sens.prev.sum,
-                                    as.vector(t(notobs.exp.currNHI.wt.sens))/exp.wt.sens.prev.sum))
- #   Influences$wt[Influences$influence == "negative"] <- -1*Influences$wt[Influences$influence == "negative"]
-    Influences <- Influences[order(Influences$wt, decreasing = TRUE),]
+                                     names(notobs.exp.curr.unexp.wt), names(obs.expNHI.unexpCurr.sensif),
+                                     names(notobs.exp.currNHI.wt.sens)), type = c(rep("Present, unexpected under NHI, unexpected under current",
+                                                                                      dim1), rep("Absent, unexpected under NHI but expected under current",
+                                                                                                 dim2), rep("Present, expected under NHI, but unexpected under current",
+                                                                                                            dim3), rep("Absent but expected under current and NHI",
+                                                                                                                       dim4)), wt = c(as.vector(t(obs.unexp.curr.unexp.wt)),
+                                                                                                                                      as.vector(t(notobs.exp.curr.unexp.wt)), as.vector(t(obs.expNHI.unexpCurr.sensif))/exp.wt.sens.prev.sum,
+                                                                                                                                      as.vector(t(notobs.exp.currNHI.wt.sens))/exp.wt.sens.prev.sum))
+    Influences <- Influences[order(Influences$wt, decreasing = TRUE),
+    ]
     Influences
   }
   mwstreams <- melbstreambiota::mwstreams
   meds <- CIs$lumarCIs$median
   if (names(obsTable)[1] == "samppr") {
-    row.names(obsTable) <- as.vector(obsTable[,1])
+    row.names(obsTable) <- as.vector(obsTable[, 1])
     obsTable <- obsTable[-1]
-    row.names(currentPredTable) <- as.vector(currentPredTable[,1])
+    row.names(currentPredTable) <- as.vector(currentPredTable[,
+                                                              1])
     currentPredTable <- currentPredTable[-1]
-    row.names(NHIPredTable) <- as.vector(NHIPredTable[,1])
+    row.names(NHIPredTable) <- as.vector(NHIPredTable[, 1])
     NHIPredTable <- NHIPredTable[-1]
   }
-  ordTaxon.classes <- melbstreambiota::taxon.classes[match(names(obsTable), melbstreambiota::taxon.classes$fam),]
-  obsTablei <- obsTable[row.names(obsTable) == samppri$samppr,]
-  NHIPredTablei <- NHIPredTable[row.names(NHIPredTable) == samppri$samppr,
-                                match(names(obsTable), names(NHIPredTable))]
+  ordTaxon.classes <- melbstreambiota::taxon.classes[match(names(obsTable),
+                                                           melbstreambiota::taxon.classes$fam), ]
+  obsTablei <- obsTable[row.names(obsTable) == samppri$samppr, ]
+  NHIPredTablei <- NHIPredTable[row.names(NHIPredTable) ==
+                                  samppri$samppr, match(names(obsTable), names(NHIPredTable))]
   NHIPredTablei$KG08 <- 0
-  currentPredPATablei <- currentPredTablei <-
-    currentPredTable[row.names(currentPredTable) == samppri$samppr,
-                     match(names(currentPredTable), names(NHIPredTable))]
-  currentPredPATablei[round(currentPredTablei,3) < ordTaxon.classes$pa.threshold] <- 0
-  currentPredPATablei[round(currentPredTablei,3) >= ordTaxon.classes$pa.threshold] <- 1
+  currentPredPATablei <- currentPredTablei <- currentPredTable[row.names(currentPredTable) ==
+                                                                 samppri$samppr, match(names(currentPredTable), names(NHIPredTable))]
+  currentPredPATablei[round(currentPredTablei, 3) < ordTaxon.classes$pa.threshold] <- 0
+  currentPredPATablei[round(currentPredTablei, 3) >= ordTaxon.classes$pa.threshold] <- 1
   lumarPred <- lumar(currentPredPATablei, NHIPredTablei)
   lumarPredLwr <- CIs$lumarCIs$lwr10[which.min(abs(meds - lumarPred$lumar))[1]]
   lumarPredUpr <- CIs$lumarCIs$upr10[which.min(abs(meds - lumarPred$lumar))[1]]
   lumarObs <- lumar(obsTablei, NHIPredTablei)
-  # lumarObs$lumar < CIs$lumarCIs$lwr10[round(lumarObs)]
   samppri$ai <- mwstreams$AttImp_L9[match(samppri$subc, mwstreams$site)]
-  samppri$af <- mwstreams$AttForest_L35W1000[match(samppri$subc, mwstreams$site)]
-  #1. missing and unexpected compared to NHI (assuming if >=0.8, it is as good as NHI...)
-  if (lumarObs$lumar < 1)
-  {
-    negInfluences <- findNegInfluencesNHI(obsTablei,NHIPredTablei)
-    # Lt0.8 <- 0.8 - lumarObs$lumar
-    # negInf0.8 <- negInfluences[c(0, which(negInfluences$cumInf < Lt0.8)) + 1,]
+  samppri$af <- mwstreams$AttForest_L35W1000[match(samppri$subc,
+                                                   mwstreams$site)]
+  if (lumarObs$lumar < 1) {
+    negInfluences <- findNegInfluencesNHI(obsTablei, NHIPredTablei)
     negInfluences$inf <- negInfluences$wt
-#    negInfluences$inf[-1] <-  negInfluences$cumInf[-1] - negInfluences$cumInf[-length(negInfluences$cumInf)]
-    negInfluences$inf <- -1*negInfluences$inf
-    negInfluences$family <- ordTaxon.classes$family[match(negInfluences$fam, ordTaxon.classes$fam)]
-    negInfluences$sens.gp <- ordTaxon.classes$sens.gp[match(negInfluences$fam, ordTaxon.classes$fam)]
-    negInfluences$family <- paste(as.vector(negInfluences$family)," (",as.vector(negInfluences$sens.gp), ")",c("","*")[match(negInfluences$type,c("Absent","Unexp"))],sep = "")
+    negInfluences$inf <- -1 * negInfluences$inf
+    negInfluences$family <- ordTaxon.classes$family[match(negInfluences$fam,
+                                                          ordTaxon.classes$fam)]
+    negInfluences$sens.gp <- ordTaxon.classes$sens.gp[match(negInfluences$fam,
+                                                            ordTaxon.classes$fam)]
+    negInfluences$family <- paste(as.vector(negInfluences$family),
+                                  " (", as.vector(negInfluences$sens.gp), ")", c("",
+                                                                                 "*")[match(negInfluences$type, c("Absent", "Unexp"))],
+                                  sep = "")
   }
   if (lumarObs$lumar < lumarPredLwr | lumarObs$lumar > lumarPredUpr) {
-    Influences <- findDiffFromCurrentInfluences(obsTablei,currentPredTablei,NHIPredTablei)
-    Influences$family <- ordTaxon.classes$family[match(Influences$fam, ordTaxon.classes$fam)]
-    Influences$sens.gp <- ordTaxon.classes$sens.gp[match(Influences$fam, ordTaxon.classes$fam)]
-    Influences$family <- paste(as.vector(Influences$family)," (",as.vector(Influences$sens.gp), ")",c("","*")[match(grepl("Absent",Influences$type),c(1,0))],sep = "")
+    Influences <- findDiffFromCurrentInfluences(obsTablei,
+                                                currentPredTablei, NHIPredTablei)
+    Influences$family <- ordTaxon.classes$family[match(Influences$fam,
+                                                       ordTaxon.classes$fam)]
+    Influences$sens.gp <- ordTaxon.classes$sens.gp[match(Influences$fam,
+                                                         ordTaxon.classes$fam)]
+    Influences$family <- paste(as.vector(Influences$family),
+                               " (", as.vector(Influences$sens.gp), ")", c("", "*")[match(grepl("Absent",
+                                                                                                Influences$type), c(1, 0))], sep = "")
   }
-  #
-  graphics::layout(matrix(c(1,2,3,3,4,4),2,3,byrow = FALSE),heights = c(6,4),widths = c(6,10,10))
-  graphics::par(mar = c(1,4,1,1))
-  graphics::plot(c(1,1), c(lumarPred$lumar, lumarObs$lumar), ylim = c(-1,1),
-       axes = FALSE, ylab = "LUMaR",xlab = "",type = 'n')
-  graphics::points(c(1,1), c(lumarPred$lumar, lumarObs$lumar),
-         pch = c(21,22), bg = c("black","white"), cex = c(1.5,1))
-  graphics::lines(c(1,1),c(lumarPredLwr,lumarPredUpr))
-  graphics::axis(2,at = seq(-1,1,0.2), labels = round(seq(-1,1,0.2),1),las = 1)
+  graphics::layout(matrix(c(1, 2, 3, 3, 4, 4), 2, 3, byrow = FALSE),
+                   heights = c(6, 4), widths = c(6, 10, 10))
+  graphics::par(mar = c(1, 4, 1, 1))
+  graphics::plot(c(1, 1), c(lumarPred$lumar, lumarObs$lumar),
+                 ylim = c(-1, 1), axes = FALSE, ylab = "LUMaR", xlab = "",
+                 type = "n")
+  graphics::points(c(1, 1), c(lumarPred$lumar, lumarObs$lumar),
+                   pch = c(21, 22), bg = c("black", "white"), cex = c(1.5,
+                                                                      1))
+  graphics::lines(c(1, 1), c(lumarPredLwr, lumarPredUpr))
+  graphics::axis(2, at = seq(-1, 1, 0.2), labels = round(seq(-1,
+                                                             1, 0.2), 1), las = 1)
   graphics::plot.new()
-  graphics::par(mar = c(0,0,0,0))
-  graphics::legend("center", pch = c(21,22,NA,NA), pt.bg = c("black","white"), pt.cex = c(1.5,1),
-                    legend = c("Predicted with 95% CIs", "Observed",
-                    paste("AI = ", round(signif(samppri$AttImp_L9*100,2),1),"%",sep = ""),
-                    paste("AF = ", round(signif(samppri$AttForest_L35W1000*100,2),1),"%",sep = "")))
-  graphics::par(mar = c(4,10,3,1))
-  if(lumarObs$lumar >= 0.8 & !(lumarObs$lumar < lumarPredLwr | lumarObs$lumar > lumarPredUpr)){
+  graphics::par(mar = c(0, 0, 0, 0))
+  graphics::legend("center", pch = c(21, 22, NA, NA), pt.bg = c("black",
+                                                                "white"), pt.cex = c(1.5, 1), legend = c("Predicted with 95% CIs",
+                                                                                                         "Observed", paste("AI = ", round(signif(samppri$AttImp_L9 *
+                                                                                                                                                   100, 2), 1), "%", sep = ""), paste("AF = ", round(signif(samppri$AttForest_L35W1000 *
+                                                                                                                                                                                                              100, 2), 1), "%", sep = "")))
+  graphics::par(mar = c(4, 10, 3, 1))
+  if (lumarObs$lumar >= 0.8 & !(lumarObs$lumar < lumarPredLwr |
+                                lumarObs$lumar > lumarPredUpr)) {
     graphics::plot.new()
-    graphics::title(main = "This site is predicted to be in reference condition and", adj = 1,
-                    font.main = 1, cex.main = 0.9)
-    graphics::title(main = "observed LUMaR is within the predicted range", adj = 1,
-                    font.main = 1, cex.main = 0.9, line = 0)
+    graphics::title(main = "This site is predicted to be in reference condition and",
+                    adj = 1, font.main = 1, cex.main = 0.9)
+    graphics::title(main = "observed LUMaR is within the predicted range",
+                    adj = 1, font.main = 1, cex.main = 0.9, line = 0)
   }
-  if (lumarObs$lumar < 0.8)
-  {
-    graphics::plot(negInfluences$inf,dim(negInfluences)[1]:1, xlim = c(min(negInfluences$inf),0), axes = FALSE,
-         ylab = "",xlab = "Reduction in LUMaR")
-    graphics::axis(2, at = dim(negInfluences)[1]:0,labels = c(negInfluences$family,""), las = 1)
-    graphics::axis(1, at = seq(-2,0,0.01))
+  if (lumarObs$lumar < 0.8) {
+    graphics::plot(negInfluences$inf, dim(negInfluences)[1]:1,
+                   xlim = c(min(negInfluences$inf), 0), axes = FALSE,
+                   ylab = "", xlab = "Reduction in LUMaR")
+    graphics::axis(2, at = dim(negInfluences)[1]:0, labels = c(negInfluences$family,
+                                                               ""), las = 1)
+    graphics::axis(1, at = seq(-2, 0, 0.01))
     graphics::abline(v = 0, lty = 3)
-    graphics::title(main = "Contributions of families to LUMaR being < 1 (reference)", adj = 1,
-          font.main = 1, cex.main = 0.9)
-#    graphics::title(main = "Observed LUMaR is close to reference condition (>0.8)", adj = 1,
-#          font.main = 3, cex.main = 0.9, line = 0.25)
-    if (lumarObs$lumar < lumarPredLwr | lumarObs$lumar > lumarPredUpr) {
-      graphics::plot(Influences$wt,1:dim(Influences)[1], axes = FALSE,
-           ylab = "",xlab = "Contribution to difference in LUMaR")
-      graphics::axis(2, at = 0:dim(Influences)[1],labels = c("",Influences$family), las = 1)
-      graphics::axis(1, at = seq(-2,2,0.01))
+    graphics::title(main = "Contributions of families to LUMaR being < 1 (reference)",
+                    adj = 1, font.main = 1, cex.main = 0.9)
+    if (lumarObs$lumar < lumarPredLwr | lumarObs$lumar >
+        lumarPredUpr) {
+      graphics::plot(Influences$wt, 1:dim(Influences)[1],
+                     axes = FALSE, ylab = "", xlab = "Contribution to difference in LUMaR")
+      graphics::axis(2, at = 0:dim(Influences)[1], labels = c("",
+                                                              Influences$family), las = 1)
+      graphics::axis(1, at = seq(-2, 2, 0.01))
       graphics::abline(v = 0, lty = 3)
       graphics::title(main = paste("Contributions of families to LUMaR being ",
-                         ifelse(lumarObs$lumar < lumarPredLwr, "<",">"),
-                         "predicted LUMaR", sep = ""), adj = 1,
-            font.main = 1, cex.main = 0.9)
-    }else{
+                                   ifelse(lumarObs$lumar < lumarPredLwr, "<", ">"),
+                                   "predicted LUMaR", sep = ""), adj = 1, font.main = 1,
+                      cex.main = 0.9)
+    }
+    else {
       graphics::plot.new()
-      graphics::title(main = "Observed LUMaR is within predicted range for this site", adj = 1,
-            font.main = 1, cex.main = 0.9)
+      graphics::title(main = "Observed LUMaR is within predicted range for this site",
+                      adj = 1, font.main = 1, cex.main = 0.9)
       Influences <- NULL
     }
-    graphics::title(main = paste("assuming AI = ",
-                       round(signif(samppri$AttImp_L9*100,2),1),
-                       "% and AF = ", round(signif(samppri$AttForest_L35W1000*100,2),1), "%", sep = ""), adj = 1,
-          font.main = 3, cex.main = 0.9, line = 0.25)
+    graphics::title(main = paste("assuming AI = ", round(signif(samppri$AttImp_L9 *
+                                                                  100, 2), 1), "% and AF = ", round(signif(samppri$AttForest_L35W1000 *
+                                                                                                             100, 2), 1), "%", sep = ""), adj = 1, font.main = 3,
+                    cex.main = 0.9, line = 0.25)
   }
   if (returnTable == TRUE)
     list(InfluencesFromRef = negInfluences, influencesFromPred = Influences)

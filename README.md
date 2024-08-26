@@ -46,3 +46,9 @@ Changes from 0.1.1 to version 0.1.2
 - sri48moW data updated, and the function `update_sri()` added to permit updating of these data without the need to update the package.
 
 - The vignette has been edited to reflect the above changes.
+
+Changes from 0.1.2 to version 0.1.3
+
+Redundant 'require' call to obsolete rgdal package removed
+
+Minor correction to sampprDiagnostic function to fix a bug found only in some circumstances.
